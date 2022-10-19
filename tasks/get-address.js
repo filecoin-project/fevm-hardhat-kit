@@ -33,7 +33,7 @@ task("get-address", "Gets Filecoin deployer address.")
     }
 
     const deployer = new ethers.Wallet(DEPLOYER_PRIVATE_KEY);
-
+    console.log("Deployer address:", deployer.address)
     const pubKey = hexToBytes(deployer.publicKey.slice(2));
     const f1addr = fa.newSecp256k1Address(pubKey).toString();
 

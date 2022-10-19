@@ -5,7 +5,7 @@ task("get-balance", "Calls the simple coin Contract to read the amount of Simple
     const contractAddr = taskArgs.contract
     const account = taskArgs.account
     const networkId = network.name
-    console.log("Reading SimpleCoin owned by", account, " on network ", networkId)
+    console.log("Reading SimpleCoin deployed at", contractAddr, "owned by", account, "on network", networkId)
     const SimpleCoin = await ethers.getContractFactory("SimpleCoin")
 
     //Get signer information
@@ -16,7 +16,7 @@ task("get-balance", "Calls the simple coin Contract to read the amount of Simple
     //Create connection to API Consumer Contract and call the createRequestTo function
     const simpleCoinContract = new ethers.Contract(contractAddr, SimpleCoin.interface, signer)
     let result = BigInt(await simpleCoinContract.getBalance(account)).toString()
-    console.log("Data is: ", result)
+    console.log("Data is:", result)
     if (result == 0 && ["hardhat", "localhost", "ganache"].indexOf(network.name) == 0) {
       console.log("You'll either need to wait another minute, or fix something!")
     }
