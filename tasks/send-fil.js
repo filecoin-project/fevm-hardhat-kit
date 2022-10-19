@@ -51,7 +51,7 @@ task("send-fil", "Send coins to another wallet.")
       const transaction = await signer.sendTransaction({
         from: signer.address,
         to: account,
-        value: "1000000000000000000",
+        value: "100000000000000000000",
         gasLimit: 10000000,
         gasPrice: priorityFee,
         nonce: nonce
