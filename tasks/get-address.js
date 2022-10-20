@@ -45,13 +45,17 @@ const deployer = new ethers.Wallet(DEPLOYER_PRIVATE_KEY);
   console.log("Send faucet funds to this address (f1):", f1addr);
   // If the address has not recieved Filecoin yet, this line will fail. Go to faucet.
   let actorId = await callRpc('Filecoin.StateLookupID', [f1addr, []]);
-  actorIdDecimal = Number(actorId.slice(1)).toString(10);
-  actorId = Number(actorId.slice(1)).toString(16);
-  const f0addr = '0xff' + '0'.repeat(38-actorId.length) + actorId;
+  if (actorId) {
+    actorIdDecimal = Number(actorId.slice(1)).toString(10);
+    actorId = Number(actorId.slice(1)).toString(16);
+    const f0addr = '0xff' + '0'.repeat(38-actorId.length) + actorId;
 
-  // console.log('Filecoin deployer address f0', "f0" + actorIdDecimal)
-  console.log('Ethereum deployer address (from f0):', f0addr);
-  console.log("priorityFee: ", priorityFee);
+    // console.log('Filecoin deployer address f0', "f0" + actorIdDecimal)
+    console.log('Ethereum deployer address (from f0):', f0addr);
+    console.log("priorityFee: ", priorityFee);
+  }else {
+    console.log("Your address has not recieved Filecoin yet. Go to faucet.")
+  }
 })
 
 
