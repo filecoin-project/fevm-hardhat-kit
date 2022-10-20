@@ -1,75 +1,46 @@
-# FEVM Hardhat Kit
+# Advanced Sample Hardhat Project
 
-## Cloning the Repo
+This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
 
-Open up your terminal (or command prompt) and navigate to a directory you would like to store this code on. Once there type in the following command:
+The project comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts. It also comes with a variety of other tools, preconfigured to work with the project code.
 
+Try running some of the following tasks:
 
-```
-git clone https://github.com/filecoin-project/FEVM-Hardhat-Kit.git
-cd FEVM-Hardhat-Kit 
-yarn install
-```
-
-
-This will clone the hardhat kit onto your computer, switch directories into the newly installed kit, and install the dependencies the kit needs to work.
-
-
-## Get a Private Key
-
-You can get a private key from a wallet provider [such as Metamask](https://metamask.zendesk.com/hc/en-us/articles/360015289632-How-to-export-an-account-s-private-key).
-
-
-## Add your Private Key as an Environment Variable
-
-Add your private key as an environment variable by running this command: 
- 
- ```
-export PRIVATE_KEY='abcdef'
+```shell
+npx hardhat accounts
+npx hardhat compile
+npx hardhat clean
+npx hardhat test
+npx hardhat node
+npx hardhat help
+REPORT_GAS=true npx hardhat test
+npx hardhat coverage
+npx hardhat run scripts/deploy.ts
+TS_NODE_FILES=true npx ts-node scripts/deploy.ts
+npx eslint '**/*.{js,ts}'
+npx eslint '**/*.{js,ts}' --fix
+npx prettier '**/*.{json,sol,md}' --check
+npx prettier '**/*.{json,sol,md}' --write
+npx solhint 'contracts/**/*.sol'
+npx solhint 'contracts/**/*.sol' --fix
 ```
 
- \
-If you use a .env file, don't commit and push any changes to .env files that may contain sensitive information, such as a private key! If this information reaches a public GitHub repository, someone can use it to check if you have any Mainnet funds in that wallet address, and steal them!
+# Etherscan verification
 
+To try out Etherscan verification, you first need to deploy a contract to an Ethereum network that's supported by Etherscan, such as Ropsten.
 
-## Get the Deployer Address
+In this project, copy the .env.example file to a file named .env, and then edit it to fill in the details. Enter your Etherscan API key, your Ropsten node URL (eg from Alchemy), and the private key of the account which will send the deployment transaction. With a valid .env file in place, first deploy your contract:
 
-Run this command:
-```
-yarn hardhat get-address
-```
-
-Copy the f1 address (the one that says to send faucet funds). We will use this in the next step to send faucet funds.
-
-Also record the f0 address. We will use the f0 address when interacting with the SimpleCoin contract.
-
-
-## Fund the Deployer Address
-
-Go to the [Wallaby faucet](https://wallaby.network/#faucet), and paste in the address we copied in the previous step. This will send some wallaby testnet FIL to the account.
-
-
-## Deploy the SimpleCoin Contract
-
-Type in the following command in the terminal: 
- 
- ```
-yarn hardhat deploy
+```shell
+hardhat run --network ropsten scripts/sample-script.ts
 ```
 
-This will compile the contract and deploy it to the Wallaby network automatically!
+Then, copy the deployment address and paste it in to replace `DEPLOYED_CONTRACT_ADDRESS` in this command:
 
-Keep note of the deployed contract address for the next step.
-
-If you read the Solidity code for SimpleCoin, you will see in the constructor our deployer account automatically gets assigned 10000 SimpleCoin when the contract is deployed.
-
-
-## Read your SimpleCoin balance
-
-Type in the following command in the terminal: 
- 
- ```
-yarn hardhat get-balance –contract “THE DEPLOYED CONTRACT ADDRESS HERE” –account “YOUR F0 ADDRESS HERE”
+```shell
+npx hardhat verify --network ropsten DEPLOYED_CONTRACT_ADDRESS "Hello, Hardhat!"
 ```
 
-The console should read that your account has 10000 SimpleCoin!
+# Performance optimizations
+
+For faster runs of your tests and scripts, consider skipping ts-node's type checking by setting the environment variable `TS_NODE_TRANSPILE_ONLY` to `1` in hardhat's environment. For more details see [the documentation](https://hardhat.org/guides/typescript.html#performance-optimizations).
