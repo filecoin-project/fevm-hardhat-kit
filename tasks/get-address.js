@@ -33,25 +33,27 @@ task("get-address", "Gets Filecoin deployer address.")
     }
 
     const deployer = new ethers.Wallet(DEPLOYER_PRIVATE_KEY);
-    console.log("Deployer address:", deployer.address)
-    const pubKey = hexToBytes(deployer.publicKey.slice(2));
-    const f1addr = fa.newSecp256k1Address(pubKey).toString();
+    const delegated = await fa.newDelegatedEthAddress(deployer.address)
 
-    const priorityFee = await callRpc("eth_maxPriorityFeePerGas");
-    const nonce = await callRpc("Filecoin.MpoolGetNonce", [f1addr]);
+    const nonce0x = await callRpc("eth_getTransactionCount", [deployer.address, "latest"]);
+    const nonce = parseInt(nonce0x, "hex")
     console.log('nonce:', nonce);
-    // console.log("Ethereum deployer address:", deployer.address);
-    console.log("Send faucet funds to this address (f1):", f1addr);
+    console.log("Ethereum deployer address:", deployer.address);
+    console.log("Filecoin delegated address:", delegated.toString())
     // If the address has not recieved Filecoin yet, this line will fail. Go to faucet.
     try {
-      let actorId = await callRpc('Filecoin.StateLookupID', [f1addr, []]);
+      let actorId = await callRpc('Filecoin.StateLookupID', [delegated.toString(), []]);
       actorIdDecimal = Number(actorId.slice(1)).toString(10);
       actorId = Number(actorId.slice(1)).toString(16);
       const f0addr = '0xff' + '0'.repeat(38 - actorId.length) + actorId;
 
       // console.log('Filecoin deployer address f0', "f0" + actorIdDecimal)
       console.log('Ethereum deployer address (from f0):', f0addr);
-      console.log("priorityFee: ", priorityFee);
+      if (nonce === 0) {
+        console.log("--")
+        console.log("You're ready to init your address now, please run:")
+        console.log("yarn hardat init-address")
+      }
     } catch (e) {
       console.log("Go to faucet: https://wallaby.network/#faucet")
     }

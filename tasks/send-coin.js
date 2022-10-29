@@ -34,9 +34,32 @@ task("send-coin", "Send coins to another wallet.")
       const amount = taskArgs.amount
       const networkId = network.name
       console.log("Sending " + amount + " SimpleCoin (", contractAddr, ") to", account, "on network", networkId)
-      const SimpleCoin = await ethers.getContractFactory("SimpleCoin")
-
-      //Get signer information
+      // Define ABI interface
+      const ABI = [{
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "receiver",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          }
+        ],
+        "name": "sendCoin",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "sufficient",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      }]
+      // Get signer information
       const DEPLOYER_PRIVATE_KEY = network.config.accounts[0]
       const provider = new ethers.providers.JsonRpcProvider("https://wallaby.node.glif.io/rpc/v0")
       const signer = new ethers.Wallet(DEPLOYER_PRIVATE_KEY).connect(provider)
@@ -48,13 +71,18 @@ task("send-coin", "Send coins to another wallet.")
       const nonce = parseInt(nonce0x, "hex")
       console.log('nonce:', nonce);
       try {
-        const simpleCoinContract = new ethers.Contract(contractAddr, SimpleCoin.interface, signer)
-        let result = await simpleCoinContract.sendCoin(account, amount, {
+        const contractInterface = new ethers.utils.Interface(ABI)
+        const data = await contractInterface.encodeFunctionData("sendCoin", [account, amount])
+        const transaction = await signer.sendTransaction({
           from: signer.address,
-          nonce: nonce,
-          gasLimit: 1000000000,
-          gasPrice: priorityFee
+          to: contractAddr,
+          value: "0",
+          data: data,
+          gasLimit: 10000000,
+          gasPrice: priorityFee,
+          nonce: nonce
         })
+        console.log(transaction)
         console.log(result)
       } catch (e) {
         console.log("Failed send coin")

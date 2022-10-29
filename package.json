@@ -10,7 +10,8 @@
     "lint:fix": "solhint 'contracts/**/*.sol' --fix",
     "format": "prettier --write .",
     "coverage": "hardhat coverage --solcoverjs ./.solcover.js",
-    "fuzzing": "docker run -it --rm -v $PWD:/src trailofbits/eth-security-toolbox"
+    "fuzzing": "docker run -it --rm -v $PWD:/src trailofbits/eth-security-toolbox",
+    "generate-address": "node scripts/generate-address.js"
   },
   "license": "MIT",
   "devDependencies": {
@@ -29,7 +30,7 @@
     "solidity-coverage": "^0.7.13"
   },
   "dependencies": {
-    "@glif/filecoin-address": "^2.0.1",
+    "@glif/filecoin-address": "^2.0.18",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.0",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
