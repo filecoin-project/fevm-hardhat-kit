@@ -7,7 +7,7 @@ Open up your terminal (or command prompt) and navigate to a directory you would 
 
 ```
 git clone https://github.com/filecoin-project/FEVM-Hardhat-Kit.git
-cd FEVM-Hardhat-Kit 
+cd FEVM-hardhat-kit
 yarn install
 ```
 
