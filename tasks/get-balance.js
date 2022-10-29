@@ -9,7 +9,7 @@ task("get-balance", "Calls the simple coin Contract to read the amount of Simple
     if (fs.existsSync("./deployments/wallaby/SimpleCoin.json")) {
       const deployment = JSON.parse(fs.readFileSync("./deployments/wallaby/SimpleCoin.json").toString())
       const contractAddr = deployment.address
-      console.log("Reading SimpleCoin deployed at", contractAddr, "owned by", account, "on network", networkId)
+      console.log("Reading SimpleCoin deployed at", contractAddr, "on network", networkId)
       const SimpleCoin = await ethers.getContractFactory("SimpleCoin")
 
       //Get signer information

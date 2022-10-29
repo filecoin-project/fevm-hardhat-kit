@@ -82,7 +82,7 @@ yarn hardhat get-balance --account “YOUR 0x ADDRESS HERE”
 
 The console should read that your account has 10000 SimpleCoin!
 
-## Send tokens to another address
+## Send coins to another address
 
 Type in the following command in the terminal: 
  
