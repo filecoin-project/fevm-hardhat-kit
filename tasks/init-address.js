@@ -39,9 +39,8 @@ task("init-address", "Init address with first transaction.")
     const signer = new ethers.Wallet(DEPLOYER_PRIVATE_KEY).connect(provider)
     const priorityFee = await callRpc("eth_maxPriorityFeePerGas");
     console.log("Signer address:", signer.address)
-    const pubKey = hexToBytes(signer.publicKey.slice(2));
-    const f1addr = fa.newSecp256k1Address(pubKey).toString();
-    const nonce = await callRpc("Filecoin.MpoolGetNonce", [f1addr]);
+    const nonce0x = await callRpc("eth_getTransactionCount", [signer.address, "latest"]);
+    const nonce = parseInt(nonce0x, "hex")
     console.log('nonce:', nonce);
     try {
       const transaction = await signer.sendTransaction({

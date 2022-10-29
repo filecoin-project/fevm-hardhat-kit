@@ -3,7 +3,8 @@ const util = require("util");
 const request = util.promisify(require("request"));
 
 task("send-fil", "Send coins to another wallet.")
-  .addParam("account", "The address of the account you want the balance for")
+  .addParam("to", "The address where you want to send FIL")
+  .addParam("amount", "Amount of FIL you want to send")
   .setAction(async (taskArgs) => {
 
     function hexToBytes(hex) {
@@ -31,10 +32,10 @@ task("send-fil", "Send coins to another wallet.")
       return JSON.parse(res.body).result;
     }
 
-    const account = taskArgs.account
+    const to = taskArgs.to
+    const amount = taskArgs.amount
     const networkId = network.name
-    console.log("Sending 10 FIL to", account, "on network", networkId)
-    const SimpleCoin = await ethers.getContractFactory("SimpleCoin")
+    console.log("Sending " + amount + " FIL to", to, "on network", networkId)
 
     //Get signer information
     const DEPLOYER_PRIVATE_KEY = network.config.accounts[0]
@@ -42,23 +43,23 @@ task("send-fil", "Send coins to another wallet.")
     const signer = new ethers.Wallet(DEPLOYER_PRIVATE_KEY).connect(provider)
     const priorityFee = await callRpc("eth_maxPriorityFeePerGas");
     console.log("Signer address:", signer.address)
-    const pubKey = hexToBytes(signer.publicKey.slice(2));
-    const f1addr = fa.newSecp256k1Address(pubKey).toString();
-    const nonce = await callRpc("Filecoin.MpoolGetNonce", [f1addr]);
+    // const pubKey = hexToBytes(signer.publicKey.slice(2));
+    // const f1addr = fa.newSecp256k1Address(pubKey).toString();
+    const nonce0x = await callRpc("eth_getTransactionCount", [signer.address, "latest"]);
+    const nonce = parseInt(nonce0x, "hex")
     console.log('nonce:', nonce);
     try {
-      //Create connection to API Consumer Contract and call the createRequestTo function
       const transaction = await signer.sendTransaction({
         from: signer.address,
-        to: account,
-        value: "100000000000000000000",
+        to: to,
+        value: amount,
         gasLimit: 10000000,
         gasPrice: priorityFee,
         nonce: nonce
       })
       console.log(transaction)
     } catch (e) {
-      console.log("Failed send coin")
+      console.log("Failed sending FIL")
       console.log(e.message)
     }
   })

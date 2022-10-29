@@ -42,8 +42,11 @@ module.exports = async ({ deployments }) => {
   const f1addr = fa.newSecp256k1Address(pubKey).toString();
 
   const priorityFee = await callRpc("eth_maxPriorityFeePerGas");
-  const nonce = await callRpc("Filecoin.MpoolGetNonce", [f1addr]);
+  // Reading the nonce 
+  const nonce0x = await callRpc("eth_getTransactionCount", [deployer.address, "latest"]);
+  const nonce = parseInt(nonce0x, "hex")
   console.log('nonce:', nonce);
+  
   console.log("Ethereum deployer address:", deployer.address);
   console.log("Send faucet funds to this address (f1):", f1addr);
   // If the address has not recieved Filecoin yet, this line will fail. Go to faucet.
