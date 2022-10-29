@@ -39,14 +39,14 @@ Run this command:
 yarn hardhat get-address
 ```
 
-Copy the f1 address (the one that says to send faucet funds). We will use this in the next step to send faucet funds.
+The f4address is the filecoin representation of your Ethereum address. This will be needed for the faucet in the next step.
 
-Also record the f0 address. We will use the f0 address when interacting with the SimpleCoin contract.
+The Ethereum address will be used otherwise.
 
 
 ## Fund the Deployer Address
 
-Go to the [Wallaby faucet](https://wallaby.network/#faucet), and paste in the address we copied in the previous step. This will send some wallaby testnet FIL to the account.
+Go to the [Wallaby faucet](https://wallaby.network/#faucet), and paste in the f4 address we copied in the previous step. This will send some wallaby testnet FIL to the account.
 
 
 ## Deploy the SimpleCoin Contract
@@ -69,7 +69,7 @@ If you read the Solidity code for SimpleCoin, you will see in the constructor ou
 Type in the following command in the terminal: 
  
  ```
-yarn hardhat get-balance --contract 'THE DEPLOYED CONTRACT ADDRESS HERE' --account 'YOUR F0 ADDRESS HERE'
+yarn hardhat get-balance --contract 'THE DEPLOYED CONTRACT ADDRESS HERE' --account 'YOUR F4 ADDRESS HERE'
 ```
 
 The console should read that your account has 10000 SimpleCoin!

@@ -38,25 +38,15 @@ const deployer = new ethers.Wallet(DEPLOYER_PRIVATE_KEY);
 module.exports = async ({ deployments }) => {
   const { deploy } = deployments;
 
-  const pubKey = hexToBytes(deployer.publicKey.slice(2));
-  const f1addr = fa.newSecp256k1Address(pubKey).toString();
 
   const priorityFee = await callRpc("eth_maxPriorityFeePerGas");
-  const nonce = await callRpc("Filecoin.MpoolGetNonce", [f1addr]);
-  //console.log('nonce:', nonce);
-  // console.log("Ethereum deployer address:", deployer.address);
-  //console.log("Send faucet funds to this address (f1):", f1addr);
-  // If the address has not recieved Filecoin yet, this line will fail. Go to faucet.
-  let actorId = await callRpc('Filecoin.StateLookupID', [f1addr, []]);
-  actorIdDecimal = Number(actorId.slice(1)).toString(10);
-  actorId = Number(actorId.slice(1)).toString(16);
-  const f0addr = '0xff' + '0'.repeat(38-actorId.length) + actorId;
+  const f4Address = fa.newDelegatedEthAddress(deployer.address).toString();
+  const nonce = await callRpc("Filecoin.MpoolGetNonce", [f4Address]);
 
-  // console.log('Filecoin deployer address f0', "f0" + actorIdDecimal)
-  console.log('Deployer Actor ID:', f0addr);
-  console.log("priorityFee: ", priorityFee);
+  console.log("Wallet Ethereum Address:", deployer.address);
+  console.log("Wallet f4Address: ", f4Address)
 
-  // await deploy("SimpleCoin", {
+
   await deploy("SimpleCoin", {
     from: deployer.address,
     args: [],
