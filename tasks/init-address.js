@@ -2,10 +2,7 @@ const fa = require("@glif/filecoin-address");
 const util = require("util");
 const request = util.promisify(require("request"));
 
-task("send-coin", "Send coins to another wallet.")
-  .addParam("contract", "The address the SimpleCoin contract")
-  .addParam("to", "The address of the account you want to send coins")
-  .addParam("amount", "The amount of coins you want to send")
+task("init-address", "Init address with first transaction.")
   .setAction(async (taskArgs) => {
 
     function hexToBytes(hex) {
@@ -33,12 +30,8 @@ task("send-coin", "Send coins to another wallet.")
       return JSON.parse(res.body).result;
     }
 
-    const contractAddr = taskArgs.contract
-    const account = taskArgs.to
-    const amount = taskArgs.amount
     const networkId = network.name
-    console.log("Sending " + amount + " SimpleCoin (", contractAddr, ") to", account, "on network", networkId)
-    const SimpleCoin = await ethers.getContractFactory("SimpleCoin")
+    console.log("Init address with first transaction", "on network", networkId)
 
     //Get signer information
     const DEPLOYER_PRIVATE_KEY = network.config.accounts[0]
@@ -51,17 +44,17 @@ task("send-coin", "Send coins to another wallet.")
     const nonce = await callRpc("Filecoin.MpoolGetNonce", [f1addr]);
     console.log('nonce:', nonce);
     try {
-      //Create connection to API Consumer Contract and call the createRequestTo function
-      const simpleCoinContract = new ethers.Contract(contractAddr, SimpleCoin.interface, signer)
-      let result = await simpleCoinContract.sendCoin(account, amount, {
+      const transaction = await signer.sendTransaction({
         from: signer.address,
-        nonce: nonce,
-        gasLimit: 1000000000,
-        gasPrice: priorityFee
+        to: signer.address,
+        value: "1",
+        gasLimit: 10000000,
+        gasPrice: priorityFee,
+        nonce: nonce
       })
-      console.log(result)
+      console.log(transaction)
     } catch (e) {
-      console.log("Failed send coin")
+      console.log("Init address failed")
       console.log(e.message)
     }
   })
