@@ -1,0 +1,3 @@
+[submodule "contracts/filecoinMockAPIs"]
+	path = contracts/filecoinMockAPIs
+	url = https://github.com/Zondax/fevm-solidity-mock-api
