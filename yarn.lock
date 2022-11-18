@@ -1324,6 +1324,11 @@
   resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
   integrity sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==
 
+"@zondax/filecoin-solidity-mock-api@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@zondax/filecoin-solidity-mock-api/-/filecoin-solidity-mock-api-0.1.0.tgz#ef860005f535aa851e62cde8b70b8a863ebb7b5c"
+  integrity sha512-OfqPLt/mnTudkLuRhIc2ln8Ogx6N2yVqEJdvcghAKPQArkoLif6YSmNIWMDyXCBGaHdzaP37Vv+Z6puFfN+ntQ==
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"

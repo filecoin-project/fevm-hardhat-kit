@@ -30,7 +30,7 @@
     "solidity-coverage": "^0.7.13"
   },
   "dependencies": {
-    "@zondax/fevm-solidity-mock-api": "^0.1.0",
+    "@zondax/filecoin-solidity-mock-api": "^0.1.0",
     "@glif/filecoin-address": "^2.0.18",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.0",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
