@@ -1,14 +1,16 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity 0.8.17;
+pragma solidity >=0.4.25 <=0.8.17;
 
 import "./CommonTypes.sol";
 
-library MinerTypes{
+/// @title Filecoin miner actor types for Solidity.
+/// @author Zondax AG
+library MinerTypes {
     struct GetOwnerReturn {
-        bytes owner;
+        string owner;
     }
     struct IsControllingAddressParam {
-        bytes addr;
+        string addr;
     }
     struct IsControllingAddressReturn {
         bool is_controlling;
@@ -24,7 +26,7 @@ library MinerTypes{
     }
 
     struct ChangeBeneficiaryParams {
-        bytes new_beneficiary;
+        string new_beneficiary;
         int256 new_quota;
         uint64 new_expiration;
     }

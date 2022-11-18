@@ -1,14 +1,15 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity 0.8.17;
+pragma solidity >=0.4.25 <=0.8.17;
 
-library CommonTypes{
+/// @title Filecoin actors' common types for Solidity.
+/// @author Zondax AG
+library CommonTypes {
     enum RegisteredSealProof {
         StackedDRG2KiBV1,
         StackedDRG512MiBV1,
         StackedDRG8MiBV1,
         StackedDRG32GiBV1,
         StackedDRG64GiBV1,
-
         StackedDRG2KiBV1P1,
         StackedDRG512MiBV1P1,
         StackedDRG8MiBV1P1,
@@ -79,7 +80,7 @@ library CommonTypes{
     }
 
     struct ActiveBeneficiary {
-        bytes beneficiary;
+        string beneficiary;
         BeneficiaryTerm term;
     }
 
@@ -188,14 +189,14 @@ library CommonTypes{
         bytes proof_bytes;
     }
 
-    struct VestingFunds{
+    struct VestingFunds {
         int64 epoch;
         int256 amount;
     }
     struct SectorDeals {
         int64 sector_type;
         int64 sector_expiry;
-        uint64 [] deal_ids;
+        uint64[] deal_ids;
     }
 
     struct Signature {
@@ -232,7 +233,7 @@ library CommonTypes{
         Multihash hash;
     }
 
-    struct Multihash{
+    struct Multihash {
         uint64 code;
         uint8 size;
         bytes digest;
