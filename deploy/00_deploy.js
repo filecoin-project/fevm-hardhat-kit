@@ -61,7 +61,7 @@ module.exports = async ({ deployments }) => {
 
   await deploy("MinerAPI", {
     from: deployer.address,
-    args: [],
+    args: [0x0000001],
     // since it's difficult to estimate the gas before f4 address is launched, it's safer to manually set
     // a large gasLimit. This should be addressed in the following releases.
     gasLimit: 1000000000, // BlockGasLimit / 10
