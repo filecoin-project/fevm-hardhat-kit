@@ -69,7 +69,7 @@ If you read the Solidity code for SimpleCoin, you will see in the constructor ou
 Type in the following command in the terminal: 
  
  ```
-yarn hardhat get-balance --contract 'THE DEPLOYED CONTRACT ADDRESS HERE' --account 'YOUR F4 ADDRESS HERE'
+yarn hardhat get-balance --contract 'THE DEPLOYED CONTRACT ADDRESS HERE' --account 'YOUR Ethereum ADDRESS HERE'
 ```
 
 The console should read that your account has 10000 SimpleCoin!
