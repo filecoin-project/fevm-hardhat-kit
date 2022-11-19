@@ -80,6 +80,3 @@ module.exports = async ({ deployments }) => {
     log: true,
   });
 };
-
-
-module.exports.tags = ["SimpleCoin", "MinerAPI", "MarketAPI"];
