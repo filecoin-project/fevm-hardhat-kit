@@ -39,14 +39,12 @@ Run this command:
 yarn hardhat get-address
 ```
 
-The f4address is the filecoin representation of your Ethereum address. This will be needed for the faucet in the next step.
-
-The Ethereum address will be used otherwise.
+The will show you the ethereum-style address associated with that private key and the filecoin-style f4 address. The Ethereum address can now be exclusively used for almost all FEVM tools, including the faucet.
 
 
 ## Fund the Deployer Address
 
-Go to the [Wallaby faucet](https://wallaby.network/#faucet), and paste in the f4 address we copied in the previous step. This will send some wallaby testnet FIL to the account.
+Go to the [Wallaby faucet](https://wallaby.network/#faucet), and paste in the Ethereum address from the previous step. This will send some wallaby testnet FIL to the account.
 
 
 ## Deploy the SimpleCoin Contract
