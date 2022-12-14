@@ -41,8 +41,8 @@ const deployer = new ethers.Wallet(DEPLOYER_PRIVATE_KEY);
 
   const f4Address = fa.newDelegatedEthAddress(deployer.address).toString();
   const nonce = await callRpc("Filecoin.MpoolGetNonce", [f4Address]);
-  console.log("f4address (for use with faucet) = ", f4Address);
-  console.log("Ethereum address:", deployer.address);  
+  console.log("Ethereum address (this addresss should work for most tools):", deployer.address);
+  console.log("f4address (informational only):", f4Address);
 })
 
 
