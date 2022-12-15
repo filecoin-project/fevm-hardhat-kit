@@ -5,14 +5,14 @@
 // Runtime Environment's members available in the global scope.
 import "hardhat-deploy";
 import "hardhat-deploy-ethers";
-import { ethers } from "hardhat";
+
 import { newSecp256k1Address } from "@glif/filecoin-address";
-import { DeployFunction } from "hardhat-deploy/types";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
+import { HttpNetworkConfig, HardhatRuntimeEnvironment } from "hardhat/types";
 
 import util from "util";
 // eslint-disable-next-line node/no-extraneous-require
 const request = util.promisify(require("request"));
+const { networkConfig } = require("../helper-hardhat-config")
 
 require("dotenv").config();
 
@@ -49,10 +49,7 @@ async function callRpc(method: any, params?: any): Promise<any> {
   return JSON.parse(res.body).result;
 }
 
-const deployer = new ethers.Wallet(process.env.PRIVATE_KEY!);
-
-const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const { deployments } = hre;
+const main = async ({network, ethers, deployments}: HardhatRuntimeEnvironment) => {
   const { deploy } = deployments;
   // Hardhat always runs the compile task when running scripts with its command
   // line interface.
@@ -60,6 +57,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   // If this script is run directly using `node` you may want to call compile
   // manually to make sure everything is compiled
   // await hre.run('compile');
+  const config = network.config as HttpNetworkConfig;
+  const w = new ethers.Wallet((config.accounts as string[])[0]);
+
+  const deployer = new ethers.Wallet(process.env.PRIVATE_KEY!);
 
   const pubKey = hexToBytes(deployer.publicKey.slice(2));
   const f1addr = newSecp256k1Address(pubKey).toString();
@@ -77,9 +78,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log("Ethereum deployer address (from f0):", f0addr);
   console.log("priorityFee: ", priorityFee);
 
+  const chainId = network.config.chainId
+  const tokenToBeMinted = networkConfig[chainId!]["tokenToBeMinted"]
   await deploy("SimpleCoin", {
     from: deployer.address,
-    args: [],
+    args: [tokenToBeMinted],
     // since it's difficult to estimate the gas before f4 address is launched, it's safer to manually set
     // a large gasLimit. This should be addressed in the following releases.
     gasLimit: 1000000000, // BlockGasLimit / 10
@@ -90,10 +93,28 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     log: true,
   });
 
+  await deploy("MinerAPI", {
+    from: deployer.address,
+    args: [0x0000001],
+    gasLimit: 1000000000,
+    maxPriorityFeePerGas: priorityFee,
+    nonce: nonce,
+    log: true,
+  })
+
+  await deploy("MarketAPI", {
+    from: deployer.address,
+    args: [],
+    gasLimit: 1000000000,
+    maxPriorityFeePerGas: priorityFee,
+    nonce: nonce,
+    log: true,
+  })
+
 };
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
-export default func;
+export default main;
 
-func.tags = ["Token"];
+main.tags = ["SimpleCoin", "MinerAPI", "MarketAPI"];
