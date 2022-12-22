@@ -2,7 +2,6 @@ require("hardhat-deploy")
 require("hardhat-deploy-ethers")
 
 const ethers = require("ethers")
-const fa = require("@glif/filecoin-address")
 const util = require("util")
 const request = util.promisify(require("request"))
 const { networkConfig } = require("../helper-hardhat-config")
@@ -39,42 +38,45 @@ module.exports = async ({ deployments }) => {
     const { deploy } = deployments
 
     const priorityFee = await callRpc("eth_maxPriorityFeePerGas")
-    const f4Address = fa.newDelegatedEthAddress(deployer.address).toString()
-    const nonce = await callRpc("Filecoin.MpoolGetNonce", [f4Address])
+    
+    // Wraps Hardhat's deploy, logging errors to console.
+    const deployLogError = async (title, obj) => {
+        let ret;
+        try {
+            ret = await deploy(title, obj);
+        } catch (error) {
+            console.log(error.toString())
+            process.exit(1)
+        }
+        return ret;
+    }
 
     console.log("Wallet Ethereum Address:", deployer.address)
     const chainId = network.config.chainId
     const tokenToBeMinted = networkConfig[chainId]["tokenToBeMinted"]
 
-    await deploy("SimpleCoin", {
+    console.log("deploying SimpleCoin...")
+    await deployLogError("SimpleCoin", {
         from: deployer.address,
         args: [tokenToBeMinted],
-
-        // since it's difficult to estimate the gas before f4 address is launched, it's safer to manually set
-        // a large gasLimit. This should be addressed in the following releases.
-        // since Ethereum's legacy transaction format is not supported on FVM, we need to specify
         // maxPriorityFeePerGas to instruct hardhat to use EIP-1559 tx format
         maxPriorityFeePerGas: priorityFee,
         log: true,
     })
 
-    await deploy("MinerAPI", {
+    console.log("deploying MinerAPI mock...")
+    await deployLogError("MinerAPI", {
         from: deployer.address,
         args: [0x0000001],
-        // since it's difficult to estimate the gas before f4 address is launched, it's safer to manually set
-        // a large gasLimit. This should be addressed in the following releases.
-        // since Ethereum's legacy transaction format is not supported on FVM, we need to specify
         // maxPriorityFeePerGas to instruct hardhat to use EIP-1559 tx format
         maxPriorityFeePerGas: priorityFee,
         log: true,
     })
 
-    await deploy("MarketAPI", {
+    console.log("deploying MarketAPI mock...")
+    await deployLogError("MarketAPI", {
         from: deployer.address,
         args: [],
-        // since it's difficult to estimate the gas before f4 address is launched, it's safer to manually set
-        // a large gasLimit. This should be addressed in the following releases.
-        // since Ethereum's legacy transaction format is not supported on FVM, we need to specify
         // maxPriorityFeePerGas to instruct hardhat to use EIP-1559 tx format
         maxPriorityFeePerGas: priorityFee,
         log: true,
