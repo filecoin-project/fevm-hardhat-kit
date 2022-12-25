@@ -10,11 +10,9 @@ import "./types/MarketTypes.sol";
 contract MarketAPI {
     mapping(string => uint256) balances;
     mapping(uint64 => MarketTypes.MockDeal) deals;
+    mapping(uint64 => address) userDeals;
 
-    constructor() {
-        mock_generate_deals();
-    }
-
+    uint64[] internal idArray;
     /// @notice Deposits the received value into the balance held in escrow.
     /// @dev Because this is a mock method, no real balance is being deducted from the caller, nor incremented in the Storage Market actor (f05).
     function add_balance(
@@ -63,6 +61,25 @@ contract MarketAPI {
                 bytes("0x111111"),
                 deals[params.id].size
             );
+    }
+
+    function get_deals_of_user() public view returns(MarketTypes.MockDeal[] memory) {
+        
+        uint k = 0;
+        uint j=0;
+        for(uint i=0;i<idArray.length;i++){
+            if(userDeals[idArray[i]] == msg.sender){
+                k++;
+            }
+        }
+        MarketTypes.MockDeal[] memory _deals = new MarketTypes.MockDeal[](k);
+        for(uint i=0;i<idArray.length;i++){
+            if(userDeals[idArray[i]] == msg.sender){
+                _deals[j] = deals[idArray[i]];
+                j++;
+            }
+        }
+        return _deals;
     }
 
     /// @return the client of a deal proposal.
@@ -182,29 +199,15 @@ contract MarketAPI {
 
     /// @notice Adds mock deal data to the internal state of this mock.
     /// @dev Feel free to adjust the data here to make it align with deals in your network.
-    function mock_generate_deals() internal {
-        MarketTypes.MockDeal memory deal_67;
-        deal_67.id = 67;
-        deal_67
-            .cid = "baga6ea4seaqlkg6mss5qs56jqtajg5ycrhpkj2b66cgdkukf2qjmmzz6ayksuci";
-        deal_67.size = 8388608;
-        deal_67.verified = false;
-        deal_67.client = "t01109";
-        deal_67.provider = "t01113";
-        deal_67.label = "mAXCg5AIg8YBXbFjtdBy1iZjpDYAwRSt0elGLF5GvTqulEii1VcM";
-        deal_67.start = 25245;
-        deal_67.end = 545150;
-        deal_67.price_per_epoch = 1100000000000;
-        deal_67.provider_collateral = 0;
-        deal_67.client_collateral = 0;
-        deal_67.activated = 1;
-        deal_67.terminated = 0;
-
-        deals[deal_67.id] = deal_67;
+    function add_deals(MarketTypes.MockDeal calldata mockDeal) external {
 
         // As EVM smart contract has a limited capacity for size (24KiB), we cannot set all deals directly here.
         // Please, take them from docs.
-
+        deals[mockDeal.id] = mockDeal;
+        idArray.push(mockDeal.id);
+        userDeals[mockDeal.id] = msg.sender;
         // Add or replace more deals here.
     }
+
+    
 }
