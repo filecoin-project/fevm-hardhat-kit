@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.4.25 <=0.8.17;
 
-import "./types/MarketTypes.sol";
+import "./types/MockMarketTypes.sol";
 
 /// @title This contract is a proxy to the singleton Storage Market actor (address: f05). Calling one of its methods will result in a cross-actor call being performed. However, in this mock library, no actual call is performed.
 /// @author Zondax AG
 /// @dev Methods prefixed with mock_ will not be available in the real library. These methods are merely used to set mock state. Note that this interface will likely break in the future as we align it
 //       with that of the real library!
-contract MarketAPI {
+contract MockMarketAPI {
     mapping(string => uint256) balances;
     mapping(uint64 => MarketTypes.MockDeal) deals;
 
