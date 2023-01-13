@@ -47,27 +47,42 @@ The will show you the ethereum-style address associated with that private key an
 Go to the [Wallaby faucet](https://wallaby.network/#faucet), and paste in the Ethereum address from the previous step. This will send some wallaby testnet FIL to the account.
 
 
-## Deploy the SimpleCoin Contract
+## Deploy the Contracts
 
-Type in the following command in the terminal: 
+Currently there are 3 main types of contracts:
+
+* Basic Solidity Examples: Simple contracts to show off basic solidity
+
+* Filecoin API Examples: Contracts that demo how to use the Filecoin APIs in Solidity to access storage deals and other Filecoin specific functions.
+
+* Filecoin Mock APIs: Contracts that mock the Filecoin APIs.
+
+Type in the following command in the terminal to deploy all contracts: 
  
  ```
 yarn hardhat deploy
 ```
 
-This will compile the contract and deploy it to the Wallaby network automatically!
+This will compile all the contracts in the contracts folder and deploy them to the Wallaby test network automatically!
 
-Keep note of the deployed contract address for the next step.
+Keep note of the deployed contract addresses for the next step.
 
-If you read the Solidity code for SimpleCoin, you will see in the constructor our deployer account automatically gets assigned 10000 SimpleCoin when the contract is deployed.
+## Interact with the Contracts
 
-
-## Read your SimpleCoin balance
+You can interact with contracts via hardhat tasks, found in the 'tasks' folder. For example, to interact with the SimpleCoin contract:
 
 Type in the following command in the terminal: 
  
  ```
-yarn hardhat get-balance --contract 'THE DEPLOYED CONTRACT ADDRESS HERE' --account 'YOUR Ethereum ADDRESS HERE'
+yarn hardhat get-balance --contract 'THE DEPLOYED CONTRACT ADDRESS HERE' --account 'YOUR ETHEREUM ADDRESS HERE'
 ```
 
-The console should read that your account has 10000 SimpleCoin!
+The console should read that your account has 12000 SimpleCoin!
+
+## Filecoin APIs
+
+The primary advantage of the FEVM over other EVM based chains is the ability to access and program around Filecoin storage deals. This can be done in the FEVM via the [Filecoin.sol library maintained by Zondax](https://github.com/Zondax/filecoin-solidity). **Note this library is currently in BETA**. It is unaudited, and the APIs will likely be changing with time. This repo will be updated as soon as possible when a breaking change occurs.
+
+The library is included in this kit as an NPM package and will automatically be downloaded when you perform the `yarn` command (don't confuse these with the included mocks)! 
+
+Currently you will find a getter contract that calls the getter methods on the MarketAPI to get storage deal data and store that data. 
