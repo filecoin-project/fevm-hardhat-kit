@@ -81,4 +81,15 @@ module.exports = async ({ deployments }) => {
         maxPriorityFeePerGas: priorityFee,
         log: true,
     })
+
+    console.log("Deploying FilecoinMarketConsumer...")
+    await deployLogError("FilecoinMarketConsumer", {
+        from: deployer.address,
+        args: [],
+        // maxPriorityFeePerGas to instruct hardhat to use EIP-1559 tx format
+        maxPriorityFeePerGas: priorityFee,
+        log: true,
+    })
+
 }
+
