@@ -44,7 +44,7 @@ The will show you the ethereum-style address associated with that private key an
 
 ## Fund the Deployer Address
 
-Go to the [Wallaby faucet](https://wallaby.network/#faucet), and paste in the Ethereum address from the previous step. This will send some wallaby testnet FIL to the account.
+Go to the [Hyperspace testnet faucet](https://hyperspace.yoga/#faucet), and paste in the Ethereum address from the previous step. This will send some hyperspace testnet FIL to the account.
 
 
 ## Deploy the Contracts
@@ -85,4 +85,8 @@ The primary advantage of the FEVM over other EVM based chains is the ability to 
 
 The library is included in this kit as an NPM package and will automatically be downloaded when you perform the `yarn` command (don't confuse these with the included mocks)! 
 
-Currently you will find a getter contract that calls the getter methods on the MarketAPI to get storage deal data and store that data. 
+Currently you will find a getter contract that calls the getter methods on the MarketAPI to get storage deal data and store that data. To do this you will need *dealIDs* which you can [find here on FilFox](https://hyperspace.filfox.info/en/deal).
+
+As an example to store most of the data available for a deal run the store-all command with a specified dealID. Below is an example of using this command below with the a deal on Hyperspace testnet with a dealID of 707. 
+
+`yarn hardhat store-all --contract "DEPLOYED FILECOINMARKETCONSUMER CONTRACT ADDRESS HERE" --dealid "707"
