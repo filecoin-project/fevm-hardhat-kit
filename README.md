@@ -22,8 +22,8 @@ You can get a private key from a wallet provider [such as Metamask](https://meta
 
 ## Add your Private Key as an Environment Variable
 
-Add your private key as an environment variable by running this command: 
- 
+Add your private key as an environment variable by running this command:
+
  ```
 export PRIVATE_KEY='abcdef'
 ```
@@ -57,13 +57,13 @@ Currently there are 3 main types of contracts:
 
 * Filecoin Mock APIs: Contracts that mock the Filecoin APIs.
 
-Type in the following command in the terminal to deploy all contracts: 
- 
+Type in the following command in the terminal to deploy all contracts:
+
  ```
 yarn hardhat deploy
 ```
 
-This will compile all the contracts in the contracts folder and deploy them to the Wallaby test network automatically!
+This will compile all the contracts in the contracts folder and deploy them to the Hyperspace test network automatically!
 
 Keep note of the deployed contract addresses for the next step.
 
@@ -71,8 +71,8 @@ Keep note of the deployed contract addresses for the next step.
 
 You can interact with contracts via hardhat tasks, found in the 'tasks' folder. For example, to interact with the SimpleCoin contract:
 
-Type in the following command in the terminal: 
- 
+Type in the following command in the terminal:
+
  ```
 yarn hardhat get-balance --contract 'THE DEPLOYED CONTRACT ADDRESS HERE' --account 'YOUR ETHEREUM ADDRESS HERE'
 ```
@@ -83,10 +83,10 @@ The console should read that your account has 12000 SimpleCoin!
 
 The primary advantage of the FEVM over other EVM based chains is the ability to access and program around Filecoin storage deals. This can be done in the FEVM via the [Filecoin.sol library maintained by Zondax](https://github.com/Zondax/filecoin-solidity). **Note this library is currently in BETA**. It is unaudited, and the APIs will likely be changing with time. This repo will be updated as soon as possible when a breaking change occurs.
 
-The library is included in this kit as an NPM package and will automatically be downloaded when you perform the `yarn` command (don't confuse these with the included mocks)! 
+The library is included in this kit as an NPM package and will automatically be downloaded when you perform the `yarn` command (don't confuse these with the included mocks)!
 
 Currently you will find a getter contract that calls the getter methods on the MarketAPI to get storage deal data and store that data. To do this you will need *dealIDs* which you can [find here on FilFox](https://hyperspace.filfox.info/en/deal).
 
-As an example to store most of the data available for a deal run the store-all command with a specified dealID. Below is an example of using this command below with the a deal on Hyperspace testnet with a dealID of 707. 
+As an example to store most of the data available for a deal run the store-all command with a specified dealID. Below is an example of using this command below with the a deal on Hyperspace testnet with a dealID of 707.
 
 `yarn hardhat store-all --contract "DEPLOYED FILECOIN_MARKET_CONSUMER CONTRACT ADDRESS HERE" --dealid "707"
