@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches:
+    - master
+
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  build:
+    name: Unit Tests
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 10.x
+    - run: npm install -g yarn
+    - run: yarn install --frozen-lockfile
+    - run: yarn test
+
+  solidity-lint:
+    name: Linting
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 10.x
+    - run: npm install -g yarn
+    - run: yarn install --frozen-lockfile
+    - run: yarn lint:sol
