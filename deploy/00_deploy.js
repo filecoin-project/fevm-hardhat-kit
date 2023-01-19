@@ -55,7 +55,7 @@ module.exports = async ({ deployments }) => {
     const chainId = network.config.chainId
     const tokenToBeMinted = networkConfig[chainId]["tokenToBeMinted"]
 
-    console.log("deploying SimpleCoin...")
+
     await deployLogError("SimpleCoin", {
         from: deployer.address,
         args: [tokenToBeMinted],
@@ -64,7 +64,6 @@ module.exports = async ({ deployments }) => {
         log: true,
     })
 
-    console.log("deploying MockMinerAPI...")
     await deployLogError("MockMinerAPI", {
         from: deployer.address,
         args: [0x0000001],
@@ -73,7 +72,6 @@ module.exports = async ({ deployments }) => {
         log: true,
     })
 
-    console.log("deploying MockMarketAPI...")
     await deployLogError("MockMarketAPI", {
         from: deployer.address,
         args: [],
@@ -82,7 +80,7 @@ module.exports = async ({ deployments }) => {
         log: true,
     })
 
-    console.log("Deploying FilecoinMarketConsumer...")
+
     await deployLogError("FilecoinMarketConsumer", {
         from: deployer.address,
         args: [],
@@ -90,6 +88,15 @@ module.exports = async ({ deployments }) => {
         maxPriorityFeePerGas: priorityFee,
         log: true,
     })
+
+    await deployLogError("DealRewarder", {
+        from: deployer.address,
+        args: [],
+        // maxPriorityFeePerGas to instruct hardhat to use EIP-1559 tx format
+        maxPriorityFeePerGas: priorityFee,
+        log: true,
+    })
+
 
 }
 
