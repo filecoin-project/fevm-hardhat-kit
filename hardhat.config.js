@@ -11,8 +11,8 @@ module.exports = {
     defaultNetwork: "wallaby",
     networks: {
         wallaby: {
-            chainId: 31415,
-            url: "https://wallaby.node.glif.io/rpc/v0",
+            chainId: 31415926,
+            url: "http://127.0.0.1:1234/rpc/v0",
             accounts: [PRIVATE_KEY],
         },
     },
