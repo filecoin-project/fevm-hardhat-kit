@@ -49,13 +49,12 @@ Go to the [Hyperspace testnet faucet](https://hyperspace.yoga/#faucet), and past
 
 ## Deploy the Contracts
 
-Currently there are 3 main types of contracts:
+Currently there are 2 main types of contracts:
 
 * Basic Solidity Examples: Simple contracts to show off basic solidity
 
 * Filecoin API Examples: Contracts that demo how to use the Filecoin APIs in Solidity to access storage deals and other Filecoin specific functions.
 
-* Filecoin Mock APIs: Contracts that mock the Filecoin APIs.
 
 Type in the following command in the terminal to deploy all contracts:
 
