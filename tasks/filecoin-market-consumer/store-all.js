@@ -47,7 +47,7 @@ task(
             maxPriorityFeePerGas: priorityFee
         })
         let result = BigInt(await filecoinMarketConsumer.dealLabel()).toString()
-        console.log("Complete! Deal Label is", result)
+        console.log("Complete! Please wait about a minute before reading state!" )
     })
   
   module.exports = {}
