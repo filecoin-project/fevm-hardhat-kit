@@ -1,5 +1,25 @@
+/*******************************************************************************
+ *   (c) 2022 Zondax AG
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ ********************************************************************************/
+//
+// DRAFT!! THIS CODE HAS NOT BEEN AUDITED - USE ONLY FOR PROTOTYPING
+
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.4.25 <=0.8.17;
+
+import "../cbor/BigIntCbor.sol";
 
 /// @title Filecoin actors' common types for Solidity.
 /// @author Zondax AG
@@ -67,20 +87,20 @@ library CommonTypes {
 
     struct PendingBeneficiaryChange {
         bytes new_beneficiary;
-        int256 new_quota;
+        BigInt new_quota;
         uint64 new_expiration;
         bool approved_by_beneficiary;
         bool approved_by_nominee;
     }
 
     struct BeneficiaryTerm {
-        int256 quota;
-        int256 used_quota;
+        BigInt quota;
+        BigInt used_quota;
         uint64 expiration;
     }
 
     struct ActiveBeneficiary {
-        string beneficiary;
+        bytes beneficiary;
         BeneficiaryTerm term;
     }
 
@@ -121,11 +141,6 @@ library CommonTypes {
         uint64 partition;
         uint8 sectors;
         int64 new_expiration;
-    }
-
-    struct FilterEstimate {
-        int256 position;
-        int256 velocity;
     }
 
     struct SectorPreCommitInfoInner {
@@ -191,17 +206,12 @@ library CommonTypes {
 
     struct VestingFunds {
         int64 epoch;
-        int256 amount;
+        BigInt amount;
     }
     struct SectorDeals {
         int64 sector_type;
         int64 sector_expiry;
         uint64[] deal_ids;
-    }
-
-    struct Signature {
-        int8 sig_type;
-        bytes data;
     }
 
     struct DealProposal {
@@ -213,14 +223,14 @@ library CommonTypes {
         string label;
         int64 start_epoch;
         int64 end_epoch;
-        int storage_price_per_epoch;
-        int provider_collateral;
-        int client_collateral;
+        BigInt storage_price_per_epoch;
+        BigInt provider_collateral;
+        BigInt client_collateral;
     }
 
     struct ClientDealProposal {
         DealProposal proposal;
-        Signature client_signature;
+        bytes client_signature;
     }
 
     struct SectorDealData {
@@ -249,5 +259,41 @@ library CommonTypes {
     struct SectorDataSpec {
         uint64[] deal_ids;
         int64 sector_type;
+    }
+
+    struct FailCode {
+        uint32 idx;
+        uint32 code;
+    }
+
+    struct BatchReturn {
+        // Total successes in batch
+        uint32 success_count;
+        // Failure code and index for each failure in batch
+        FailCode[] fail_codes;
+    }
+
+    struct Claim {
+        // The provider storing the data (from allocation).
+        uint64 provider;
+        // The client which allocated the DataCap (from allocation).
+        uint64 client;
+        // Identifier of the data committed (from allocation).
+        bytes data;
+        // The (padded) size of data (from allocation).
+        uint64 size;
+        // The min period after term_start which the provider must commit to storing data
+        int64 term_min;
+        // The max period after term_start for which provider can earn QA-power for the data
+        int64 term_max;
+        // The epoch at which the (first range of the) piece was committed.
+        int64 term_start;
+        // ID of the provider's sector in which the data is committed.
+        uint64 sector;
+    }
+    struct ClaimTerm {
+        uint64 provider;
+        uint64 claim_id;
+        int64 term_max;
     }
 }

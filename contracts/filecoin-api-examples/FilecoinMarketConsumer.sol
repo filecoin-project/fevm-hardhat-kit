@@ -29,42 +29,42 @@ contract FilecoinMarketConsumer {
     } 
 
     function storeDealLabel(uint64 dealId) public  {
-        dealLabel = MarketAPI.getDealLabel(MarketTypes.GetDealLabelParams(dealId)).label;
+        dealLabel = MarketAPI.getDealLabel(dealId).label;
     }
 
     function storeDealClient(uint64 dealId) public {
-        dealClientActorId = MarketAPI.getDealClient(MarketTypes.GetDealClientParams(dealId)).client;
+        dealClientActorId = MarketAPI.getDealClient(dealId).client;
     }
 
     function storeDealClientProvider(uint64 dealId) public {
-        dealProviderActorId = MarketAPI.getDealProvider(MarketTypes.GetDealProviderParams(dealId)).provider;
+        dealProviderActorId = MarketAPI.getDealProvider(dealId).provider;
     }
 
     function storeDealCommitment(uint64 dealId) public {
-        dealCommitment = MarketAPI.getDealDataCommitment(MarketTypes.GetDealDataCommitmentParams(dealId));
+        dealCommitment = MarketAPI.getDealDataCommitment(dealId);
     }
 
     function storeDealTerm(uint64 dealId) public {
-        dealTerm = MarketAPI.getDealTerm(MarketTypes.GetDealTermParams(dealId));
+        dealTerm = MarketAPI.getDealTerm(dealId);
     }
 
     function storeDealTotalPrice(uint64 dealId) public {
-       dealPricePerEpoch = MarketAPI.getDealTotalPrice(MarketTypes.GetDealEpochPriceParams(dealId));
+       dealPricePerEpoch = MarketAPI.getDealTotalPrice(dealId);
     }
 
     function storeClientCollateral(uint64 dealId) public {
-        clientCollateral = MarketAPI.getDealClientCollateral(MarketTypes.GetDealClientCollateralParams(dealId));
+        clientCollateral = MarketAPI.getDealClientCollateral(dealId);
     }
     
     function storeProviderCollateral(uint64 dealId) public {
-        providerCollateral = MarketAPI.getDealProviderCollateral(MarketTypes.GetDealProviderCollateralParams(dealId));
+        providerCollateral = MarketAPI.getDealProviderCollateral(dealId);
     }
 
     function storeDealVerificaton(uint64 dealId) public {
-        isDealActivated = MarketAPI.getDealVerified(MarketTypes.GetDealVerifiedParams(dealId)).verified;
+        isDealActivated = MarketAPI.getDealVerified(dealId).verified;
     }
 
     function storeDealActivationStatus(uint64 dealId) public {
-        activationStatus = MarketAPI.getDealActivation(MarketTypes.GetDealActivationParams(dealId));
+        activationStatus = MarketAPI.getDealActivation(dealId);
     }
 }
