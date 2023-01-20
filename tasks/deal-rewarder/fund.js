@@ -2,12 +2,10 @@ const util = require("util");
 const request = util.promisify(require("request"));
 
 task(
-    "add-cid",
-    "Adds a CID (should be a piece ID) of data that you would like to put a storage bounty on."
+    "fund",
+    "Sends FIL to bounty contract."
   )
     .addParam("contract", "The address of the DealRewarder contract")
-    .addParam("cid", "The piece CID of the data you want to put up a bounty for")
-    .addParam("size", "Size of the data you are putting a bounty on")
     .setAction(async (taskArgs) => {
         const contractAddr = taskArgs.contract
         const account = taskArgs.account
@@ -42,9 +40,8 @@ task(
 
         
         const dealRewarder = new ethers.Contract(contractAddr, DealRewarder.interface, signer)
-        const cid = taskArgs.cid
-        const size = taskArgs.size
-        await dealRewarder.addCID(cid, size, {
+        await dealRewarder.fund(0, {
+            value: ethers.utils.parseEther("1"),
             gasLimit: 1000000000,
             maxPriorityFeePerGas: priorityFee
         })

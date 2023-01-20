@@ -2,17 +2,16 @@ const util = require("util");
 const request = util.promisify(require("request"));
 
 task(
-    "add-cid",
-    "Adds a CID (should be a piece ID) of data that you would like to put a storage bounty on."
+    "claim-bounty",
+    "Sends 1 FIL to whomever the client on the deal is."
   )
     .addParam("contract", "The address of the DealRewarder contract")
-    .addParam("cid", "The piece CID of the data you want to put up a bounty for")
-    .addParam("size", "Size of the data you are putting a bounty on")
+    .addParam("dealid", "The id of the deal with the completed bounty")
     .setAction(async (taskArgs) => {
         const contractAddr = taskArgs.contract
         const account = taskArgs.account
         const networkId = network.name
-        console.log("Adding CID as a bounty", networkId)
+        console.log("Claiming Bounty on network", networkId)
         const DealRewarder = await ethers.getContractFactory("DealRewarder")
   
         //Get signer information
@@ -42,9 +41,8 @@ task(
 
         
         const dealRewarder = new ethers.Contract(contractAddr, DealRewarder.interface, signer)
-        const cid = taskArgs.cid
-        const size = taskArgs.size
-        await dealRewarder.addCID(cid, size, {
+        const dealid = taskArgs.dealid
+        await dealRewarder.claim_bounty(dealid, {
             gasLimit: 1000000000,
             maxPriorityFeePerGas: priorityFee
         })
@@ -52,4 +50,3 @@ task(
     })
   
   module.exports = {}
-  
