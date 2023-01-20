@@ -28,7 +28,6 @@ Add your private key as an environment variable by running this command:
 export PRIVATE_KEY='abcdef'
 ```
 
- \
 If you use a .env file, don't commit and push any changes to .env files that may contain sensitive information, such as a private key! If this information reaches a public GitHub repository, someone can use it to check if you have any Mainnet funds in that wallet address, and steal them!
 
 
@@ -39,7 +38,7 @@ Run this command:
 yarn hardhat get-address
 ```
 
-The will show you the ethereum-style address associated with that private key and the filecoin-style f4 address. The Ethereum address can now be exclusively used for almost all FEVM tools, including the faucet.
+The will show you the ethereum-style address associated with that private key and the filecoin-style f4 address (also known as t4 address on testnets)! The Ethereum address can now be exclusively used for almost all FEVM tools, including the faucet.
 
 
 ## Fund the Deployer Address

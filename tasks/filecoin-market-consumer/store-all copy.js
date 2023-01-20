@@ -2,18 +2,17 @@ const util = require("util");
 const request = util.promisify(require("request"));
 
 task(
-    "add-cid",
-    "Adds a CID (should be a piece ID) of data that you would like to put a storage bounty on."
+    "store-all",
+    "Calls all the getter functions in the Filecoin Market API to store data from a specific deal."
   )
-    .addParam("contract", "The address of the DealRewarder contract")
-    .addParam("cid", "The piece CID of the data you want to put up a bounty for")
-    .addParam("size", "Size of the data you are putting a bounty on")
+    .addParam("contract", "The address of the FilecoinMarketConsumer contract")
+    .addParam("dealid", "The id of the deal who's data you want to store")
     .setAction(async (taskArgs) => {
         const contractAddr = taskArgs.contract
         const account = taskArgs.account
         const networkId = network.name
-        console.log("Adding CID as a bounty", networkId)
-        const DealRewarder = await ethers.getContractFactory("DealRewarder")
+        console.log("Storing data from FilecoinMarketAPI Getter Functions on network", networkId)
+        const FilecoinMarketConsumer = await ethers.getContractFactory("FilecoinMarketConsumer")
   
         //Get signer information
         const accounts = await ethers.getSigners()
@@ -41,13 +40,13 @@ task(
       }
 
         
-        const dealRewarder = new ethers.Contract(contractAddr, DealRewarder.interface, signer)
-        const cid = taskArgs.cid
-        const size = taskArgs.size
-        await dealRewarder.addCID(cid, size, {
+        const filecoinMarketConsumer = new ethers.Contract(contractAddr, FilecoinMarketConsumer.interface, signer)
+        const dealID = taskArgs.dealid
+        await filecoinMarketConsumer.storeAll(dealID, {
             gasLimit: 1000000000,
             maxPriorityFeePerGas: priorityFee
         })
+        
         console.log("Complete! Please wait about a minute before reading state!" )
     })
   
