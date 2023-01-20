@@ -21,6 +21,7 @@
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.11.15",
     "chai": "^4.3.7",
+    "cids": "^1.1.9",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.5.1",
     "hardhat": "^2.11.2",
