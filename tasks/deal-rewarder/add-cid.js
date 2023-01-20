@@ -1,3 +1,4 @@
+const CID = require('cids')
 const util = require("util");
 const request = util.promisify(require("request"));
 
@@ -44,10 +45,15 @@ task(
         const dealRewarder = new ethers.Contract(contractAddr, DealRewarder.interface, signer)
         const cid = taskArgs.cid
         const size = taskArgs.size
-        await dealRewarder.addCID(cid, size, {
+        const cidHexRaw = new CID(cid).toString('base16').substring(1)
+        const cidHex = "0x00" + cidHexRaw
+        console.log("Bytes are:", cidHex)
+   
+        await dealRewarder.addCID(cidHex, size, {
             gasLimit: 1000000000,
             maxPriorityFeePerGas: priorityFee
         })
+       
         console.log("Complete! Please wait about a minute before reading state!" )
     })
   
