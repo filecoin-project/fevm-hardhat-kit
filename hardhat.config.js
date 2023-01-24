@@ -5,6 +5,14 @@ require("./tasks")
 require("dotenv").config()
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY
+
+var nodeUrl;
+try {
+  nodeUrl = require('../../kit')(100);
+} catch {
+  nodeUrl = '';
+}
+
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
     solidity: "0.8.17",
@@ -15,6 +23,11 @@ module.exports = {
             url: "https://api.hyperspace.node.glif.io/rpc/v1",
             accounts: [PRIVATE_KEY],
         },
+        itest: {
+          chainId: 314,
+          url: nodeUrl + "/rpc/v0",
+          accounts: [process.env.DEPLOYER_PRIVATE_KEY],
+        }
     },
     paths: {
         sources: "./contracts",

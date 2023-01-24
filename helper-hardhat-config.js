@@ -5,6 +5,10 @@ const networkConfig = {
         name: "hyperspace",
         tokenToBeMinted: 12000,
     },
+    314: {
+        name: "itest",
+        tokenToBeMinted: 12000,
+    },
 }
 
 // const developmentChains = ["hardhat", "localhost"]
