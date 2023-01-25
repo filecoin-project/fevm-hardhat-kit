@@ -8,7 +8,7 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY
 
 var nodeUrl;
 try {
-  nodeUrl = require('../../kit')(100);
+  nodeUrl = require('../../kit').initNode(100);
 } catch {
   nodeUrl = '';
 }
