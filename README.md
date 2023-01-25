@@ -2,7 +2,7 @@
 
 ## Cloning the Repo
 
-Open up your terminal (or comand prompt) and navigate to a directory you would like to store this code on. Once there type in the following command:
+Open up your terminal (or command prompt) and navigate to a directory you would like to store this code on. Once there type in the following command:
 
 
 ```
