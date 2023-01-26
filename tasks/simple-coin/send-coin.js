@@ -14,12 +14,12 @@ task("send-coin", "Sends SimpleCoin")
     //create a SimpleCoin contract factory
     const SimpleCoin = await ethers.getContractFactory("SimpleCoin", wallet)
     //create a SimpleCoin contract instance 
-    //This is what we will call to interact with the contract
+    //this is what you will call to interact with the deployed contract
     const simpleCoinContract = await SimpleCoin.attach(contractAddr)
 
     console.log("Sending:", amount, "SimpleCoin to", toAccount)
 
-    //call the sendCoin function in the SimpleCoin contract
+    //send transaction to call the sendCoin() method
     const transaction = await simpleCoinContract.sendCoin(toAccount, amount)
     const receipt = await transaction.wait()
     let result = BigInt(await simpleCoinContract.getBalance(toAccount)).toString()
