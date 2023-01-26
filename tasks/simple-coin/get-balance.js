@@ -8,7 +8,7 @@ task(
       const contractAddr = taskArgs.contract
       const account = taskArgs.account
       const networkId = network.name
-      console.log("Reading SimpleCoin owned by", account, " on network ", networkId)
+      console.log("Reading SimpleCoin owned by", account, "on network", networkId)
       const SimpleCoin = await ethers.getContractFactory("SimpleCoin")
 
       //Get signer information
@@ -17,9 +17,9 @@ task(
 
       const simpleCoinContract = new ethers.Contract(contractAddr, SimpleCoin.interface, signer)
       let result = BigInt(await simpleCoinContract.getBalance(account)).toString()
-      console.log("Data is: ", result)
+      console.log("Amount of Simplecoin owned by", account, "is", result)
       let mintedToken = await simpleCoinContract.getMintedTokenBalance()
-      console.log(`Total amount of Minted tokens is ${mintedToken}`)
+      console.log(`Total amount of minted tokens is ${mintedToken}`)
   })
 
 module.exports = {}
