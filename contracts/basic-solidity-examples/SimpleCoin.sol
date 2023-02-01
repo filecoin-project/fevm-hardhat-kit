@@ -5,13 +5,18 @@ pragma solidity 0.8.17;
 error SimpleCoin__NotEnoughBalance();
 
 contract SimpleCoin {
-        mapping (address => uint) balances;
+        mapping (address => uint) public balances;
         uint256 private i_tokensToBeMinted;
 
+        event tokensMinted(
+            uint256 indexed numberTokensMinted,
+            address owner    
+        );
 
         constructor(uint256 tokensToBeMinted) {
                 balances[tx.origin] = tokensToBeMinted;
                 i_tokensToBeMinted= tokensToBeMinted;
+                emit tokensMinted(tokensToBeMinted, msg.sender);
         }
 
         function sendCoin(address receiver, uint amount) public returns(bool sufficient) {
@@ -25,10 +30,6 @@ contract SimpleCoin {
                 return true;
         }
 
-        function getBalanceInEth(address addr) public view returns(uint){
-                return getBalance(addr) * 2;
-        }
-
         function getBalance(address addr) public view returns(uint) {
                 return balances[addr];
         }
@@ -36,6 +37,4 @@ contract SimpleCoin {
         function getMintedTokenBalance() public view returns(uint256){
                 return i_tokensToBeMinted;
         }
-
-
 }
