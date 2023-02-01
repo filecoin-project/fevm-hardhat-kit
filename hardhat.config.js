@@ -8,7 +8,7 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY
 
 var nodeUrl;
 try {
-  nodeUrl = require('../../kit').initNode(100);
+  nodeUrl = require('../../kit').initNode(100, 200);
 } catch {
   nodeUrl = '';
 }
@@ -25,7 +25,7 @@ module.exports = {
         },
         itest: {
           chainId: 314,
-          url: nodeUrl + "/rpc/v0",
+          url: nodeUrl + "/rpc/v1",
           accounts: [process.env.DEPLOYER_PRIVATE_KEY],
         }
     },
