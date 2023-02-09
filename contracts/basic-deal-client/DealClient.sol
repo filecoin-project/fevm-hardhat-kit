@@ -13,10 +13,28 @@ contract DealClient {
     bool skipIPNIAnnounce;
   }
 
+  struct DealProposal {
+    bytes pieceCid;
+    uint64 paddedPieceSize;
+    bool verifiedDeal;
+    bytes32 client;
+    bytes32 provider;
+
+    bytes label;
+
+    uint64 startEpoch;
+    uint64 endEpoch;
+
+    uint64 storagePricePerEpoch;
+
+    uint64 providerCollateral;
+    uint64 clientCollateral;
+  }
+
   mapping(bytes => bool) public cidSet;
   mapping(bytes => uint) public cidSizes;
   mapping(bytes => mapping(bytes => bool)) public cidProviders;
-  mapping(bytes32 => bytes) public payloads; // payloads maps between bytes32 id and a CBOR-encoded DealProposal struct
+  mapping(bytes32 => DealProposal) public proposals;
   mapping(bytes32 => DealParams) public params; // additional deal params, such as location ref
 
   event ReceivedDataCap(string received);
@@ -60,18 +78,19 @@ contract DealClient {
     }
   }
 
-  function makeDealProposal(bytes memory _deal) public returns (bytes32) {
-    bytes32 _id = keccak256(abi.encodePacked(block.timestamp, msg.sender, _deal));
-    payloads[_id] = _deal;
+  function makeDealProposal(DealProposal memory _deal) public returns (bytes32) {
+    bytes32 _id = keccak256(abi.encodePacked(block.timestamp, msg.sender));
+    proposals[_id] = _deal;
 
     emit DealProposalCreate(_id);
 
     return _id;
   }
 
-  function makeDealProposalWithParams(bytes memory _deal, DealParams memory _dp) public returns (bytes32) {
-    bytes32 _id = keccak256(abi.encodePacked(block.timestamp, msg.sender, _deal));
-    payloads[_id] = _deal;
+  function makeDealProposalWithParams(DealProposal memory _deal, DealParams memory _dp) public returns (bytes32) {
+    bytes32 _id = keccak256(abi.encodePacked(block.timestamp, msg.sender));
+
+    proposals[_id] = _deal;
     params[_id] = _dp;
 
     emit DealProposalCreate(_id);
@@ -79,8 +98,8 @@ contract DealClient {
     return _id;
   }
 
-  function getDealProposal(bytes32 id) public returns(bytes memory) {
-    return payloads[id];
+  function getDealProposal(bytes32 id) public returns(DealProposal memory) {
+    return proposals[id];
   }
 
   function getDealParams(bytes32 id) public returns(DealParams memory) {
