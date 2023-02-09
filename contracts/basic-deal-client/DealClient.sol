@@ -17,8 +17,8 @@ contract DealClient {
     bytes pieceCid;
     uint64 paddedPieceSize;
     bool verifiedDeal;
-    bytes32 client;
-    bytes32 provider;
+    bytes client;
+    //bytes provider;
 
     bytes label;
 
@@ -98,11 +98,11 @@ contract DealClient {
     return _id;
   }
 
-  function getDealProposal(bytes32 id) public returns(DealProposal memory) {
+  function getDealProposal(bytes32 id) public view returns(DealProposal memory) {
     return proposals[id];
   }
 
-  function getDealParams(bytes32 id) public returns(DealParams memory) {
+  function getDealParams(bytes32 id) public view returns(DealParams memory) {
     return params[id];
   }
 
