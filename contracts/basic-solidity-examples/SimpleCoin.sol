@@ -10,7 +10,12 @@ contract SimpleCoin {
 
         event tokensMinted(
             uint256 indexed numberTokensMinted,
-            address owner    
+            address owner
+        );
+
+        event tokensSent(
+            uint256 indexed tokensSent,
+            address owner
         );
 
         constructor(uint256 tokensToBeMinted) {
@@ -27,6 +32,8 @@ contract SimpleCoin {
 
                 balances[msg.sender] -= amount;
                 balances[receiver] += amount;
+
+                emit tokensSent(amount, receiver);
                 return true;
         }
 
