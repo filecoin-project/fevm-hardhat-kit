@@ -13,7 +13,6 @@ contract DealClient {
     uint64 paddedPieceSize;
     bool verifiedDeal;
     bytes client;
-    //bytes provider;
 
     bytes label;
 
@@ -26,21 +25,22 @@ contract DealClient {
     uint64 clientCollateral;
 
     string version
-    bytes params // json encoded?!?
+    bytes params
   }
 
-  // abiPacked(params)
   //struct DealParams {
     //string locationRef;
     //bool removeUnsealedCopy;
     //bool skipIPNIAnnounce;
+    //bytes provider
+    //bytes signature
   //}
 
   mapping(bytes => bool) public cidSet;
   mapping(bytes => uint) public cidSizes;
   mapping(bytes => mapping(bytes => bool)) public cidProviders;
+
   mapping(bytes32 => DealProposal) public proposals;
-  mapping(bytes32 => DealParams) public params; // additional deal params, such as location ref
 
   event ReceivedDataCap(string received);
   event DealProposalCreate(bytes32 indexed id);
@@ -92,24 +92,9 @@ contract DealClient {
     return _id;
   }
 
-  //function makeDealProposalWithParams(DealProposal memory _deal, DealParams memory _dp) public returns (bytes32) {
-    //bytes32 _id = keccak256(abi.encodePacked(block.timestamp, msg.sender));
-
-    //proposals[_id] = _deal;
-    ////params[_id] = _dp;
-
-    //emit DealProposalCreate(_id);
-
-    //return _id;
-  //}
-
   function getDealProposal(bytes32 id) public view returns(DealProposal memory) {
     return proposals[id];
   }
-
-  //function getDealParams(bytes32 id) public view returns(DealParams memory) {
-    //return params[id];
-  //}
 
   function publish_deal(bytes memory raw_auth_params, address callee) public {
     // calls standard filecoin receiver on message authentication api method number
