@@ -38,7 +38,7 @@ Run this command:
 yarn hardhat get-address
 ```
 
-The will show you the ethereum-style address associated with that private key and the filecoin-style f4 address (also known as t4 address on testnets)! The Ethereum address can now be exclusively used for almost all FEVM tools, including the faucet.
+This will show you the ethereum-style address associated with that private key and the filecoin-style f4 address (also known as t4 address on testnets)! The Ethereum address can now be exclusively used for almost all FEVM tools, including the faucet.
 
 
 ## Fund the Deployer Address
@@ -85,7 +85,7 @@ The library is included in this kit as an NPM package and will automatically be 
 
 Currently you will find a getter contract that calls the getter methods on the MarketAPI to get storage deal data and store that data. To do this you will need *dealIDs* which you can [find here on FilFox](https://hyperspace.filfox.info/en/deal).
 
-As an example to store most of the data available for a deal run the store-all command with a specified dealID. Below is an example of using this command below with the a deal on Hyperspace testnet with a dealID of 707.
+As an example to store most of the data available for a deal run the store-all command with a specified dealID. Below is an example of using this command below with a deal on Hyperspace testnet with a dealID of 707.
 
 ```
 yarn hardhat store-all --contract "DEPLOYED FILECOIN_MARKET_CONSUMER CONTRACT ADDRESS HERE" --dealid "707"
