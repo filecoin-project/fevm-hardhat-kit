@@ -7,11 +7,6 @@ contract DealClient {
   uint64 constant public AUTHORIZE_MESSAGE_METHOD_NUM = 2643134072;
   uint64 constant public DATACAP_RECEIVER_HOOK_METHOD_NUM = 3726118371;
 
-  struct DealParams {
-    string locationRef;
-    bool removeUnsealedCopy;
-    bool skipIPNIAnnounce;
-  }
 
   struct DealProposal {
     bytes pieceCid;
@@ -29,7 +24,17 @@ contract DealClient {
 
     uint64 providerCollateral;
     uint64 clientCollateral;
+
+    string version
+    bytes params // json encoded?!?
   }
+
+  // abiPacked(params)
+  //struct DealParams {
+    //string locationRef;
+    //bool removeUnsealedCopy;
+    //bool skipIPNIAnnounce;
+  //}
 
   mapping(bytes => bool) public cidSet;
   mapping(bytes => uint) public cidSizes;
@@ -87,24 +92,24 @@ contract DealClient {
     return _id;
   }
 
-  function makeDealProposalWithParams(DealProposal memory _deal, DealParams memory _dp) public returns (bytes32) {
-    bytes32 _id = keccak256(abi.encodePacked(block.timestamp, msg.sender));
+  //function makeDealProposalWithParams(DealProposal memory _deal, DealParams memory _dp) public returns (bytes32) {
+    //bytes32 _id = keccak256(abi.encodePacked(block.timestamp, msg.sender));
 
-    proposals[_id] = _deal;
-    params[_id] = _dp;
+    //proposals[_id] = _deal;
+    ////params[_id] = _dp;
 
-    emit DealProposalCreate(_id);
+    //emit DealProposalCreate(_id);
 
-    return _id;
-  }
+    //return _id;
+  //}
 
   function getDealProposal(bytes32 id) public view returns(DealProposal memory) {
     return proposals[id];
   }
 
-  function getDealParams(bytes32 id) public view returns(DealParams memory) {
-    return params[id];
-  }
+  //function getDealParams(bytes32 id) public view returns(DealParams memory) {
+    //return params[id];
+  //}
 
   function publish_deal(bytes memory raw_auth_params, address callee) public {
     // calls standard filecoin receiver on message authentication api method number
