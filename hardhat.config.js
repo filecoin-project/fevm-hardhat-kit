@@ -11,10 +11,10 @@ module.exports = {
     defaultNetwork: "hyperspace",
     networks: {
         hyperspace: {
-            //chainId: 1,
-            chainId: 31415926,
-            //url: "https://api.hyperspace.node.glif.io/rpc/v1",
-            url: "http://localhost:1234/rpc/v1",
+            chainId: 3141,
+            //chainId: 31415926,
+            url: "https://api.hyperspace.node.glif.io/rpc/v1",
+            //url: "http://localhost:1234/rpc/v1",
             accounts: [PRIVATE_KEY],
         },
     },

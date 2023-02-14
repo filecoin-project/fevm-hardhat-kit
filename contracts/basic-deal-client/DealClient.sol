@@ -24,17 +24,9 @@ contract DealClient {
     uint64 providerCollateral;
     uint64 clientCollateral;
 
-    string version
-    bytes params
+    string version;
+    bytes params;
   }
-
-  //struct DealParams {
-    //string locationRef;
-    //bool removeUnsealedCopy;
-    //bool skipIPNIAnnounce;
-    //bytes provider
-    //bytes signature
-  //}
 
   mapping(bytes => bool) public cidSet;
   mapping(bytes => uint) public cidSizes;
