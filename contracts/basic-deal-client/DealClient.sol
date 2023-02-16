@@ -65,6 +65,7 @@ contract DealClient {
 
   function handle_filecoin_method(uint64 method, uint64, bytes calldata params) public {
     if (method == AUTHORIZE_MESSAGE_METHOD_NUM) {
+      return;
       bytes calldata deal_proposal_cbor_bytes = specific_authenticate_message_params_parse(params);
       (bytes calldata cidraw, bytes calldata provider, uint size) = specific_deal_proposal_cbor_parse(deal_proposal_cbor_bytes);
       authorizeData(cidraw, provider, size);
