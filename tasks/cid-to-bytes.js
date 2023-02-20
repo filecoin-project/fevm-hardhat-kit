@@ -7,7 +7,7 @@ task(
     .addParam("cid", "The piece CID of the data you want to put up a bounty for")
     .setAction(async (taskArgs) => {
         //store taskargs as useable variables
-        const cid = taskArgs.piececid
+        const cid = taskArgs.cid
 
         //convert piece CID string to hex bytes
         const cidHexRaw = new CID(cid).toString('base16').substring(1)
