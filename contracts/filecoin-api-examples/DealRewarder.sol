@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-import { MarketAPI } from "../lib/filecoin-solidity/contracts/v0.8/MarketAPI.sol";
-import { CommonTypes } from "../lib/filecoin-solidity/contracts/v0.8/types/CommonTypes.sol";
-import { MarketTypes } from "../lib/filecoin-solidity/contracts/v0.8/types/MarketTypes.sol";
-import { Actor, HyperActor } from "../lib/filecoin-solidity/contracts/v0.8/utils/Actor.sol";
-import { Misc } from "../lib/filecoin-solidity/contracts/v0.8/utils/Misc.sol";
+import { MarketAPI } from "@zondax/filecoin-solidity/contracts/v0.8/MarketAPI.sol";
+import { CommonTypes } from "@zondax/filecoin-solidity/contracts/v0.8/types/CommonTypes.sol";
+import { MarketTypes } from "@zondax/filecoin-solidity/contracts/v0.8/types/MarketTypes.sol";
+import { Actor } from "@zondax/filecoin-solidity/contracts/v0.8/utils/Actor.sol";
+import { Misc } from "@zondax/filecoin-solidity/contracts/v0.8/utils/Misc.sol";
 
 /* 
 Contract Usage
@@ -54,13 +54,13 @@ contract DealRewarder {
     }
 
     function claim_bounty(uint64 deal_id) public {
-        MarketTypes.GetDealDataCommitmentReturn memory commitmentRet = MarketAPI.getDealDataCommitment(MarketTypes.GetDealDataCommitmentParams({id: deal_id}));
-        MarketTypes.GetDealProviderReturn memory providerRet = MarketAPI.getDealProvider(MarketTypes.GetDealProviderParams({id: deal_id}));
+        MarketTypes.GetDealDataCommitmentReturn memory commitmentRet = MarketAPI.getDealDataCommitment(deal_id);
+        MarketTypes.GetDealProviderReturn memory providerRet = MarketAPI.getDealProvider(deal_id);
 
         authorizeData(commitmentRet.data, providerRet.provider, commitmentRet.size);
 
         // get dealer (bounty hunter client)
-        MarketTypes.GetDealClientReturn memory clientRet = MarketAPI.getDealClient(MarketTypes.GetDealClientParams({id: deal_id}));
+        MarketTypes.GetDealClientReturn memory clientRet = MarketAPI.getDealClient(deal_id);
 
         // send reward to client 
         send(clientRet.client);
@@ -78,7 +78,7 @@ contract DealRewarder {
         delete emptyParams;
 
         uint oneFIL = 1000000000000000000;
-        HyperActor.call_actor_id(METHOD_SEND, oneFIL, DEFAULT_FLAG, Misc.NONE_CODEC, emptyParams, actorID);
+        Actor.callByID(actorID, METHOD_SEND, Misc.NONE_CODEC, emptyParams, oneFIL, false);
 
     }
 
