@@ -8,34 +8,14 @@ contract DealClient {
   uint64 constant public DATACAP_RECEIVER_HOOK_METHOD_NUM = 3726118371;
 
 
-  struct DealProposal {
-    bytes pieceCid;
-    uint64 paddedPieceSize;
-    bool verifiedDeal;
-    bytes client;
-
-    bytes label;
-
-    uint64 startEpoch;
-    uint64 endEpoch;
-
-    uint64 storagePricePerEpoch;
-
-    uint64 providerCollateral;
-    uint64 clientCollateral;
-
-    string version;
-    bytes params;
-  }
-
   mapping(bytes => bool) public cidSet;
   mapping(bytes => uint) public cidSizes;
   mapping(bytes => mapping(bytes => bool)) public cidProviders;
 
-  mapping(bytes32 => DealProposal) public proposals;
+  mapping(bytes32 => bytes) public proposals;
 
   event ReceivedDataCap(string received);
-  event DealProposalCreate(bytes32 indexed id);
+  event DealProposalCreate(bytes32 indexed id, bytes size, bool indexed verified, uint price);
 
   address public owner;
 
@@ -76,16 +56,16 @@ contract DealClient {
     }
   }
 
-  function makeDealProposal(DealProposal memory _deal) public returns (bytes32) {
+  function makeDealProposal(bytes memory _deal, bytes memory size, bool verified, uint price) public returns (bytes32) {
     bytes32 _id = keccak256(abi.encodePacked(block.timestamp, msg.sender));
     proposals[_id] = _deal;
 
-    emit DealProposalCreate(_id);
+    emit DealProposalCreate(_id, size, verified, price);
 
     return _id;
   }
 
-  function getDealProposal(bytes32 id) public view returns(DealProposal memory) {
+  function getDealProposal(bytes32 id) public view returns(bytes memory) {
     return proposals[id];
   }
 
