@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "compile": "hardhat compile",
+    "deploy": "hardhat deploy --export-all /react-app/src/contracts/hardhat_contracts.json",
     "test": "hardhat test test/unit/*_test.js --network hardhat",
     "test-staging": "hardhat test test/staging/*_test.js --network goerli",
     "lint": "solhint 'contracts/*.sol'",
