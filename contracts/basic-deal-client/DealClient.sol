@@ -82,7 +82,7 @@ contract DealClient {
         pieceToProposal[proposal.piece_cid] = ProposalIdSet(_id, true);
 
         // writes the proposal metadata to the event log
-        emit DealProposalCreate(_id, proposal.piece_size, proposal.verified_deal, bigIntToUint(proposal.storage_price_per_epoch));
+        emit DealProposalCreate(_id, proposal.piece_size, proposal.verified_deal, 0); //bigIntToUint(proposal.storage_price_per_epoch));
     }
 
 
@@ -94,11 +94,10 @@ contract DealClient {
     function authenticateMessage(bytes memory params) view internal {
 
         AccountTypes.AuthenticateMessageParams memory amp = params.deserializeAuthenticateMessageParams();
-        //TODO: fix DealProposal deserialization
-        //MarketTypes.DealProposal memory proposal = amp.message.deserializeDealProposal();
+        MarketTypes.DealProposal memory proposal = amp.message.deserializeDealProposal();
 
-        //require(pieceToProposal[proposal.piece_cid].valid, "piece cid must be added before authorizing");
-        //require(!pieceProviders[proposal.piece_cid].valid, "deal failed policy check: provider already claimed this cid");
+        require(pieceToProposal[proposal.piece_cid].valid, "piece cid must be added before authorizing");
+        require(!pieceProviders[proposal.piece_cid].valid, "deal failed policy check: provider already claimed this cid");
     }
 
     function dealNotify(bytes memory params) internal {
