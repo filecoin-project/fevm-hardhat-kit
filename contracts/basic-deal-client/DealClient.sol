@@ -12,6 +12,7 @@ import { MarketCBOR } from "@zondax/filecoin-solidity/contracts/v0.8/cbor/Market
 import { BytesCBOR } from "@zondax/filecoin-solidity/contracts/v0.8/cbor/BytesCbor.sol";
 import { BigNumbers, BigNumber } from "@zondax/solidity-bignumber/src/BigNumbers.sol";
 import "@zondax/filecoin-solidity/contracts/v0.8/external/CBOR.sol";
+import { CBOR_CODEC } from "@zondax/filecoin-solidity/contracts/v0.8/utils/Misc.sol";
 import { ContractDealProposal, serializeContractDealProposal, deserializeContractDealProposal} from "./ContractDealProposal.sol";
 
 import "hardhat/console.sol";
@@ -170,6 +171,7 @@ contract DealClient {
         )
     {
         bytes memory ret;
+        uint64 codec;
         // dispatch methods
         if (method == AUTHENTICATE_MESSAGE_METHOD_NUM) {
             authenticateMessage(params);
@@ -177,6 +179,7 @@ contract DealClient {
             CBOR.CBORBuffer memory buf = CBOR.create(1);
             buf.writeBool(true);
             ret = buf.data();
+            codec = CBOR_CODEC;
         } else if (method == MARKET_NOTIFY_DEAL_METHOD_NUM) {
             dealNotify(params);
         } else if (method == DATACAP_RECEIVER_HOOK_METHOD_NUM) {
@@ -184,7 +187,7 @@ contract DealClient {
         } else {
             revert("the filecoin method that was called is not handled");
         }
-        return (0, 0, ret);
+        return (0, codec, ret);
     }
 }
 
