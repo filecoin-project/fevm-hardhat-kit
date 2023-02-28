@@ -46,10 +46,12 @@ contract DealClient {
     uint64 constant public DATACAP_RECEIVER_HOOK_METHOD_NUM = 3726118371;
     uint64 constant public MARKET_NOTIFY_DEAL_METHOD_NUM = 4186741094;
 
-    mapping(bytes32 => bytes) public dealProposals; // dealID -> dealProposalBytes
+    mapping(bytes32 => uint256) public dealProposals; // dealID -> dealProposalBytes
     mapping(bytes => ProposalIdSet) public pieceToProposal; // commP -> dealProposalID
     mapping(bytes => ProviderSet) public pieceProviders; // commP -> provider
     mapping(bytes => uint64) public pieceDeals; // commP -> deal ID
+    ContractDealProposal[] deals; // required to add to avoid CompilerError: Stack too deep, try removing local variables
+
 
     event ReceivedDataCap(string received);
     event DealProposalCreate(bytes32 indexed id, uint64 size, bool indexed verified, uint256 price);
@@ -62,34 +64,39 @@ contract DealClient {
 
     // FOR DEMO PURPOSES
     function simpleDealProposal(bytes memory pieceCid, uint64 pieceSize) public {
+        CommonTypes.Cid memory dealCid = CommonTypes.Cid({
+            data: pieceCid
+        });
+
         ContractDealProposal memory deal;
-        deal.piece_cid = pieceCid;
+        deal.piece_cid = dealCid;
         deal.piece_size = pieceSize;
         deal.storage_price_per_epoch = uintToBigInt(0);
 
-        bytes memory serDeal = serializeContractDealProposal(deal);
-        makeDealProposal(serDeal);
+        makeDealProposal(deal);
 
     }
 
-    function makeDealProposal(bytes memory deal) public {
+    function makeDealProposal(ContractDealProposal memory deal) public {
         // TODO: evaluate permissioning here
         require(msg.sender == owner);
 
-        // creates a unique ID for the deal proposal -- there are many ways to do this
-        bytes32 _id = keccak256(abi.encodePacked(block.timestamp, msg.sender));
-        dealProposals[_id] = deal;
+        uint256 index = deals.length;
+        deals.push(deal);
 
-        ContractDealProposal memory proposal = deserializeContractDealProposal(deal);
-        pieceToProposal[proposal.piece_cid] = ProposalIdSet(_id, true);
+        // creates a unique ID for the deal proposal -- there are many ways to do this
+        bytes32 _id = keccak256(abi.encodePacked(block.timestamp, msg.sender, index));
+        dealProposals[_id] = index;
+
+        pieceToProposal[deal.piece_cid.data] = ProposalIdSet(_id, true);
 
         // writes the proposal metadata to the event log
-        emit DealProposalCreate(_id, proposal.piece_size, proposal.verified_deal, 0); //bigIntToUint(proposal.storage_price_per_epoch));
+        emit DealProposalCreate(_id, deal.piece_size, deal.verified_deal, 0); //bigIntToUint(deal.storage_price_per_epoch));
     }
 
 
-    function getDealProposal(bytes32 proposalId) view public returns (bytes memory) {
-        return dealProposals[proposalId];
+    function getDealProposal(bytes32 proposalId) view public returns (ContractDealProposal memory) {
+        return deals[dealProposals[proposalId]];
     }
 
 
