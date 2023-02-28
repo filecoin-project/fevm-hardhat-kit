@@ -47,7 +47,7 @@ struct DealRequest {
     uint64 piece_size;
     bool verified_deal;
     // To be cast to a CommonTypes.FilAddress
-    bytes client_addr;
+    // bytes client_addr;
     // CommonTypes.FilAddress provider;
     string label;
     int64 start_epoch;
@@ -102,7 +102,6 @@ contract DealClient {
     }
 
     function makeDealProposal(DealRequest calldata deal) public {
-        // TODO: evaluate permissioning here
         // TODO: length check on byte fields
         require(msg.sender == owner);
 
@@ -128,7 +127,7 @@ contract DealClient {
         ret.piece_cid = CommonTypes.Cid(deal.piece_cid);
         ret.piece_size = deal.piece_size;
         ret.verified_deal = deal.verified_deal;
-        ret.client = CommonTypes.FilAddress(deal.client_addr);
+        ret.client = getDelegatedAddress(address(this));
         // Set a dummy provider. The provider that picks up this deal will need to set its own address.
         ret.provider = FilAddresses.fromActorID(0);
         ret.label = deal.label;
