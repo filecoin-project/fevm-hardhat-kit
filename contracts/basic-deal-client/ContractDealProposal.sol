@@ -2,7 +2,7 @@
 pragma solidity ^0.8.17;
 
 import "@zondax/filecoin-solidity/contracts/v0.8/cbor/BigIntCbor.sol";
-//import "@zondax/filecoin-solidity/contracts/v0.8/external/CBOR.sol";
+import "@zondax/filecoin-solidity/contracts/v0.8/external/CBOR.sol";
 import "@zondax/filecoin-solidity/contracts/v0.8/utils/CborDecode.sol";
 import "@zondax/filecoin-solidity/contracts/v0.8/cbor/FilecoinCbor.sol";
 import { CommonTypes } from "@zondax/filecoin-solidity/contracts/v0.8/types/CommonTypes.sol";
@@ -10,9 +10,25 @@ import { CommonTypes } from "@zondax/filecoin-solidity/contracts/v0.8/types/Comm
 
 using CBOR for CBOR.CBORBuffer;
 using CBORDecoder for bytes;
-using BigIntCBOR for CommonTypes.BigInt;
 using BigIntCBOR for bytes;
-using FilecoinCBOR for CBOR.CBORBuffer;
+using BigIntCBOR for CommonTypes.BigInt;
+
+struct ContractDealProposalNew {
+    CommonTypes.Cid piece_cid;
+    uint64 piece_size;
+    bool verified_deal;
+    CommonTypes.FilAddress provider;
+    string label;
+    int64 start_epoch;
+    int64 end_epoch;
+    CommonTypes.BigInt storage_price_per_epoch;
+    CommonTypes.BigInt provider_collateral;
+    CommonTypes.BigInt client_collateral;
+    string location_ref;
+    string version;
+    bytes params;
+}
+
 
 struct ContractDealProposal {
     bytes piece_cid;
