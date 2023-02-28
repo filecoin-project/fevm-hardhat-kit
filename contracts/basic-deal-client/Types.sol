@@ -36,7 +36,10 @@ function serializeDealProposal(MarketTypes.DealProposal memory dealProposal) pur
 
     buf.startFixedArray(11);
 
-    buf.writeCid(dealProposal.piece_cid.data);
+    // TODO writeCid is buggy because it does not set the expected 0x00 prefix as per
+    // https://ipld.io/specs/codecs/dag-cbor/spec/#links. We do it here, and will submit
+    // a bugfix upstream.
+    buf.writeCid(bytes.concat(hex'00', dealProposal.piece_cid.data));
     buf.writeUInt64(dealProposal.piece_size);
     buf.writeBool(dealProposal.verified_deal);
     buf.writeBytes(dealProposal.client.data);
@@ -50,7 +53,6 @@ function serializeDealProposal(MarketTypes.DealProposal memory dealProposal) pur
 
     return buf.data();
 }
-
 
 function deserializeDealProposal(bytes memory rawResp) pure returns (MarketTypes.DealProposal memory ret) {
     uint byteIdx = 0;
