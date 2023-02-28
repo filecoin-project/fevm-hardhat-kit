@@ -98,8 +98,8 @@ contract DealClient {
         AccountTypes.AuthenticateMessageParams memory amp = params.deserializeAuthenticateMessageParams();
         MarketTypes.DealProposal memory proposal = amp.message.deserializeDealProposal();
 
-        require(pieceToProposal[proposal.piece_cid].valid, "piece cid must be added before authorizing");
-        require(!pieceProviders[proposal.piece_cid].valid, "deal failed policy check: provider already claimed this cid");
+        require(pieceToProposal[proposal.piece_cid.data].valid, "piece cid must be added before authorizing");
+        require(!pieceProviders[proposal.piece_cid.data].valid, "deal failed policy check: provider already claimed this cid");
     }
 
     function dealNotify(bytes memory params) internal {
@@ -107,17 +107,16 @@ contract DealClient {
         MarketTypes.MarketDealNotifyParams memory mdnp = params.deserializeMarketDealNotifyParams();
         MarketTypes.DealProposal memory proposal = mdnp.dealProposal.deserializeDealProposal();
 
-        require(pieceToProposal[proposal.piece_cid].valid, "piece cid must be added before authorizing");
-        require(!pieceProviders[proposal.piece_cid].valid, "deal failed policy check: provider already claimed this cid");
+        require(pieceToProposal[proposal.piece_cid.data].valid, "piece cid must be added before authorizing");
+        require(!pieceProviders[proposal.piece_cid.data].valid, "deal failed policy check: provider already claimed this cid");
 
-        pieceProviders[proposal.piece_cid] = ProviderSet(proposal.provider, true);
-        pieceDeals[proposal.piece_cid] = mdnp.dealId;
+        pieceProviders[proposal.piece_cid.data] = ProviderSet(proposal.provider.data, true);
+        pieceDeals[proposal.piece_cid.data] = mdnp.dealId;
 
     }
 
     // client - filecoin address byte format
-    function addBalance(bytes memory client, uint256 value) public {
-
+    function addBalance(CommonTypes.FilAddress memory client, uint256 value) public {
         require(msg.sender == owner);
 
         // TODO:: remove first arg
@@ -140,16 +139,16 @@ contract DealClient {
     }
 
 
-    function withdrawBalance(bytes memory client, uint256 value) public returns(uint) {
+    function withdrawBalance(CommonTypes.FilAddress memory client, uint256 value) public returns(uint) {
         // TODO:: remove first arg
         // change to ethAddr -> actorId and use that in the below API
 
         require(msg.sender == owner);
 
         MarketTypes.WithdrawBalanceParams memory params = MarketTypes.WithdrawBalanceParams(client, uintToBigInt(value));
-        MarketTypes.WithdrawBalanceReturn memory ret = MarketAPI.withdrawBalance(params);
+        CommonTypes.BigInt memory ret = MarketAPI.withdrawBalance(params);
 
-        return bigIntToUint(ret.amount_withdrawn);
+        return bigIntToUint(ret);
     }
 
     function receiveDataCap(bytes memory params) internal {
