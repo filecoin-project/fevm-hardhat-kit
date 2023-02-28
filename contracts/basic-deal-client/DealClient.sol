@@ -10,14 +10,13 @@ import { CommonTypes } from "@zondax/filecoin-solidity/contracts/v0.8/types/Comm
 import { AccountCBOR } from "@zondax/filecoin-solidity/contracts/v0.8/cbor/AccountCbor.sol";
 import { MarketCBOR } from "@zondax/filecoin-solidity/contracts/v0.8/cbor/MarketCbor.sol";
 import { BytesCBOR } from "@zondax/filecoin-solidity/contracts/v0.8/cbor/BytesCbor.sol";
-import { BigNumbers, BigNumber } from "@zondax/solidity-bignumber/src/BigNumbers.sol";
-import "@zondax/filecoin-solidity/contracts/v0.8/external/CBOR.sol";
-import { ContractDealProposal, serializeContractDealProposal, deserializeContractDealProposal} from "./ContractDealProposal.sol";
+import { BigNumbers } from "@zondax/filecoin-solidity/contracts/v0.8/external/BigNumbers.sol";
+import { CBOR } from "@zondax/filecoin-solidity/contracts/v0.8/external/CBOR.sol";
+import { Misc } from "@zondax/filecoin-solidity/contracts/v0.8/utils/Misc.sol";
+import { FilAddresses } from "@zondax/filecoin-solidity/contracts/v0.8/utils/FilAddresses.sol";
+import { MarketDealNotifyParams, deserializeMarketDealNotifyParams, serializeDealProposal, deserializeDealProposal } from "./Types.sol";
 
 import "hardhat/console.sol";
-
-// TODO take from Zondax's filecoin-solidity/Misc.sol
-uint64 constant CBOR_CODEC = 0x51;
 
 using CBOR for CBOR.CBORBuffer;
 
@@ -39,20 +38,59 @@ struct ProviderSet {
     bool valid;
 }
 
-contract DealClient {
+// User request for this contract to make a deal. This structure is modelled after Filecoin's Deal
+// Proposal, but leaves out the provider, since any provider can pick up a deal broadcast by this
+// contract.
+struct DealRequest {
+    // To be cast to a CommonTypes.Cid
+    bytes piece_cid;
+    uint64 piece_size;
+    bool verified_deal;
+    // To be cast to a CommonTypes.FilAddress
+    bytes client_addr;
+    // CommonTypes.FilAddress provider;
+    string label;
+    int64 start_epoch;
+    int64 end_epoch;
+    uint256 storage_price_per_epoch;
+    uint256 provider_collateral;
+    uint256 client_collateral;
+    uint64 extra_params_version;
+    ExtraParamsV1 extra_params;
+}
 
+// Extra parameters associated with the deal request. These are off-protocol flags that
+// the storage provider will need.
+struct ExtraParamsV1 {
+	string location_ref;
+	uint64 car_size;
+	bool skip_ipni_announce;
+	bool remove_unsealed_copy;
+}
+
+function serializeExtraParamsV1(ExtraParamsV1 memory params) pure returns (bytes memory) {
+    CBOR.CBORBuffer memory buf = CBOR.create(64);
+    buf.startFixedArray(4);
+    buf.writeString(params.location_ref);
+    buf.writeUInt64(params.car_size);
+    buf.writeBool(params.skip_ipni_announce);
+    buf.writeBool(params.remove_unsealed_copy);
+    return buf.data();
+}
+
+contract DealClient {
     using AccountCBOR for *;
-    //using BigInt for CommonTypes;
     using MarketCBOR for *;
 
     uint64 constant public AUTHENTICATE_MESSAGE_METHOD_NUM = 2643134072;
     uint64 constant public DATACAP_RECEIVER_HOOK_METHOD_NUM = 3726118371;
     uint64 constant public MARKET_NOTIFY_DEAL_METHOD_NUM = 4186741094;
 
-    mapping(bytes32 => bytes) public dealProposals; // dealID -> dealProposalBytes
+    mapping(bytes32 => uint256) public dealProposals; // contract deal id -> deal index
     mapping(bytes => ProposalIdSet) public pieceToProposal; // commP -> dealProposalID
     mapping(bytes => ProviderSet) public pieceProviders; // commP -> provider
     mapping(bytes => uint64) public pieceDeals; // commP -> deal ID
+    DealRequest[] deals;
 
     event ReceivedDataCap(string received);
     event DealProposalCreate(bytes32 indexed id, uint64 size, bool indexed verified, uint256 price);
@@ -63,64 +101,73 @@ contract DealClient {
         owner = msg.sender;
     }
 
-    // FOR DEMO PURPOSES
-    function simpleDealProposal(bytes memory pieceCid, uint64 pieceSize) public {
-        ContractDealProposal memory deal;
-        deal.piece_cid = pieceCid;
-        deal.piece_size = pieceSize;
-        deal.storage_price_per_epoch = uintToBigInt(0);
-
-        bytes memory serDeal = serializeContractDealProposal(deal);
-        makeDealProposal(serDeal);
-
-    }
-
-    function makeDealProposal(bytes memory deal) public {
+    function makeDealProposal(DealRequest calldata deal) public {
         // TODO: evaluate permissioning here
+        // TODO: length check on byte fields
         require(msg.sender == owner);
 
-        // creates a unique ID for the deal proposal -- there are many ways to do this
-        bytes32 _id = keccak256(abi.encodePacked(block.timestamp, msg.sender));
-        dealProposals[_id] = deal;
+        uint256 index = deals.length;
+        deals.push(deal);
 
-        ContractDealProposal memory proposal = deserializeContractDealProposal(deal);
-        pieceToProposal[proposal.piece_cid] = ProposalIdSet(_id, true);
+        // creates a unique ID for the deal proposal -- there are many ways to do this
+        bytes32 _id = keccak256(abi.encodePacked(block.timestamp, msg.sender, index));
+        dealProposals[_id] = index;
+
+        pieceToProposal[deal.piece_cid] = ProposalIdSet(_id, true);
 
         // writes the proposal metadata to the event log
-        emit DealProposalCreate(_id, proposal.piece_size, proposal.verified_deal, 0); //bigIntToUint(proposal.storage_price_per_epoch));
+        emit DealProposalCreate(_id, deal.piece_size, deal.verified_deal, deal.storage_price_per_epoch);
     }
 
-
+    // Returns a CBOR-encoded DealProposal.
     function getDealProposal(bytes32 proposalId) view public returns (bytes memory) {
-        return dealProposals[proposalId];
+        // TODO make these array accesses safe.
+        DealRequest memory deal = deals[dealProposals[proposalId]];
+
+        MarketTypes.DealProposal memory ret;
+        ret.piece_cid = CommonTypes.Cid(deal.piece_cid);
+        ret.piece_size = deal.piece_size;
+        ret.verified_deal = deal.verified_deal;
+        ret.client = CommonTypes.FilAddress(deal.client_addr);
+        // Set a dummy provider. The provider that picks up this deal will need to set its own address.
+        ret.provider = FilAddresses.fromActorID(0);
+        ret.label = deal.label;
+        ret.start_epoch = deal.start_epoch;
+        ret.end_epoch = deal.end_epoch;
+        ret.storage_price_per_epoch = uintToBigInt(deal.storage_price_per_epoch);
+        ret.provider_collateral = uintToBigInt(deal.provider_collateral);
+        ret.client_collateral = uintToBigInt(deal.client_collateral);
+
+        return serializeDealProposal(ret);
     }
 
+    function getExtraParams(bytes32 proposalId) view public returns (bytes memory extra_params) {
+        // TODO make these array accesses safe.
+        DealRequest memory deal = deals[dealProposals[proposalId]];
+        return serializeExtraParamsV1(deal.extra_params);
+    }
 
     function authenticateMessage(bytes memory params) view internal {
-
         AccountTypes.AuthenticateMessageParams memory amp = params.deserializeAuthenticateMessageParams();
-        MarketTypes.DealProposal memory proposal = amp.message.deserializeDealProposal();
+        MarketTypes.DealProposal memory proposal = deserializeDealProposal(amp.message);
 
-        require(pieceToProposal[proposal.piece_cid].valid, "piece cid must be added before authorizing");
-        require(!pieceProviders[proposal.piece_cid].valid, "deal failed policy check: provider already claimed this cid");
+        require(pieceToProposal[proposal.piece_cid.data].valid, "piece cid must be added before authorizing");
+        require(!pieceProviders[proposal.piece_cid.data].valid, "deal failed policy check: provider already claimed this cid");
     }
 
     function dealNotify(bytes memory params) internal {
+        MarketDealNotifyParams memory mdnp = deserializeMarketDealNotifyParams(params);
+        MarketTypes.DealProposal memory proposal = deserializeDealProposal(mdnp.dealProposal);
 
-        MarketTypes.MarketDealNotifyParams memory mdnp = params.deserializeMarketDealNotifyParams();
-        MarketTypes.DealProposal memory proposal = mdnp.dealProposal.deserializeDealProposal();
+        require(pieceToProposal[proposal.piece_cid.data].valid, "piece cid must be added before authorizing");
+        require(!pieceProviders[proposal.piece_cid.data].valid, "deal failed policy check: provider already claimed this cid");
 
-        require(pieceToProposal[proposal.piece_cid].valid, "piece cid must be added before authorizing");
-        require(!pieceProviders[proposal.piece_cid].valid, "deal failed policy check: provider already claimed this cid");
-
-        pieceProviders[proposal.piece_cid] = ProviderSet(proposal.provider, true);
-        pieceDeals[proposal.piece_cid] = mdnp.dealId;
-
+        pieceProviders[proposal.piece_cid.data] = ProviderSet(proposal.provider.data, true);
+        pieceDeals[proposal.piece_cid.data] = mdnp.dealId;
     }
 
     // client - filecoin address byte format
-    function addBalance(bytes memory client, uint256 value) public {
-
+    function addBalance(CommonTypes.FilAddress memory client, uint256 value) public {
         require(msg.sender == owner);
 
         // TODO:: remove first arg
@@ -131,28 +178,28 @@ contract DealClient {
 
     // Below 2 funcs need to go to filecoin.sol
     function uintToBigInt(uint256 value) internal view returns(CommonTypes.BigInt memory) {
-        BigNumber memory bigNumVal = BigNumbers.init(value, false);
+        BigNumbers.BigNumber memory bigNumVal = BigNumbers.init(value, false);
         CommonTypes.BigInt memory bigIntVal = CommonTypes.BigInt(bigNumVal.val, bigNumVal.neg);
         return bigIntVal;
     }
 
     function bigIntToUint(CommonTypes.BigInt memory bigInt) internal view returns (uint256) {
-        BigNumber memory bigNumUint = BigNumbers.init(bigInt.val, bigInt.neg);
+        BigNumbers.BigNumber memory bigNumUint = BigNumbers.init(bigInt.val, bigInt.neg);
         uint256 bigNumExtractedUint = uint256(bytes32(bigNumUint.val));
         return bigNumExtractedUint;
     }
 
 
-    function withdrawBalance(bytes memory client, uint256 value) public returns(uint) {
+    function withdrawBalance(CommonTypes.FilAddress memory client, uint256 value) public returns(uint) {
         // TODO:: remove first arg
         // change to ethAddr -> actorId and use that in the below API
 
         require(msg.sender == owner);
 
         MarketTypes.WithdrawBalanceParams memory params = MarketTypes.WithdrawBalanceParams(client, uintToBigInt(value));
-        MarketTypes.WithdrawBalanceReturn memory ret = MarketAPI.withdrawBalance(params);
+        CommonTypes.BigInt memory ret = MarketAPI.withdrawBalance(params);
 
-        return bigIntToUint(ret.amount_withdrawn);
+        return bigIntToUint(ret);
     }
 
     function receiveDataCap(bytes memory params) internal {
@@ -181,7 +228,7 @@ contract DealClient {
             CBOR.CBORBuffer memory buf = CBOR.create(1);
             buf.writeBool(true);
             ret = buf.data();
-            codec = CBOR_CODEC;
+            codec = Misc.CBOR_CODEC;
         } else if (method == MARKET_NOTIFY_DEAL_METHOD_NUM) {
             dealNotify(params);
         } else if (method == DATACAP_RECEIVER_HOOK_METHOD_NUM) {
@@ -192,4 +239,3 @@ contract DealClient {
         return (0, codec, ret);
     }
 }
-

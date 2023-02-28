@@ -1362,19 +1362,10 @@
   resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
   integrity sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==
 
-"@zondax/filecoin-solidity-mock-api@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@zondax/filecoin-solidity-mock-api/-/filecoin-solidity-mock-api-0.2.0.tgz#de40a49f7c346b35fbf8e3395aef7134c98c6917"
-  integrity sha512-pP3Ge4YctqOdlaM78dOOHF309q8T6cPZLQHVc0Gc1UleJnv9+ak85hfEfY7Crg3RUWhp8fR5IYUBYAoohm18NQ==
-
-"@zondax/filecoin-solidity@https://github.com/nonsense/filecoin-solidity.git":
-  version "0.0.0"
-  resolved "https://github.com/nonsense/filecoin-solidity.git#10a75bd66767582fdbbb797517567988b384bd01"
-
-"@zondax/solidity-bignumber@0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@zondax/solidity-bignumber/-/solidity-bignumber-0.1.0.tgz#4885ef8751b5cc0ee92639545bdfbec19907dde2"
-  integrity sha512-DdY78jd6syZHJSl7B9mkDo5hso405hYuug1FHkjCO3WSS6vz1kAmi6RWQdTdrZoIZ+4pCXcRUnylBQtM+gpQKA==
+"@zondax/filecoin-solidity@2.0.0-beta.1":
+  version "2.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@zondax/filecoin-solidity/-/filecoin-solidity-2.0.0-beta.1.tgz#6fda576add17fdaef9f2294114392f1e3093b2a9"
+  integrity sha512-V2KsiDD/5PVcmqEWn7JimcpyZale/74duZFTZpYTGw6bCee9hgT3oChU5excL1WncVr5U2Ljg/YAeTlTmvY8fA==
 
 abbrev@1:
   version "1.1.1"
