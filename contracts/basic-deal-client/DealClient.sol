@@ -11,10 +11,12 @@ import { AccountCBOR } from "@zondax/filecoin-solidity/contracts/v0.8/cbor/Accou
 import { MarketCBOR } from "@zondax/filecoin-solidity/contracts/v0.8/cbor/MarketCbor.sol";
 import { BytesCBOR } from "@zondax/filecoin-solidity/contracts/v0.8/cbor/BytesCbor.sol";
 import { BigNumbers, BigNumber } from "@zondax/solidity-bignumber/src/BigNumbers.sol";
+import "@zondax/filecoin-solidity/contracts/v0.8/external/CBOR.sol";
 import { ContractDealProposal, serializeContractDealProposal, deserializeContractDealProposal} from "./ContractDealProposal.sol";
 
 import "hardhat/console.sol";
 
+using CBOR for CBOR.CBORBuffer;
 
 contract MockMarket {
     function publish_deal(bytes memory raw_auth_params, address callee) public {
@@ -155,19 +157,34 @@ contract DealClient {
         // Add get datacap balance api and store datacap amount
     }
 
-
-    function handle_filecoin_method(uint64 method, uint64, bytes memory params) public {
+    function handle_filecoin_method(
+        uint64 method,
+        uint64,
+        bytes memory params
+    )
+        public
+        returns (
+            uint32,
+            uint64,
+            bytes memory
+        )
+    {
+        bytes memory ret;
         // dispatch methods
         if (method == AUTHENTICATE_MESSAGE_METHOD_NUM) {
             authenticateMessage(params);
+            // If we haven't reverted, we should return a CBOR true to indicate that verification passed.
+            CBOR.CBORBuffer memory buf = CBOR.create(1);
+            buf.writeBool(true);
+            ret = buf.data();
         } else if (method == MARKET_NOTIFY_DEAL_METHOD_NUM) {
             dealNotify(params);
-        }
-        else if (method == DATACAP_RECEIVER_HOOK_METHOD_NUM) {
+        } else if (method == DATACAP_RECEIVER_HOOK_METHOD_NUM) {
             receiveDataCap(params);
         } else {
             revert("the filecoin method that was called is not handled");
         }
+        return (0, 0, ret);
     }
 }
 
