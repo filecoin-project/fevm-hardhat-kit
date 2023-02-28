@@ -115,7 +115,7 @@ contract DealClient {
         pieceToProposal[deal.piece_cid] = ProposalIdSet(_id, true);
 
         // writes the proposal metadata to the event log
-        emit DealProposalCreate(_id, deal.piece_size, deal.verified_deal, 0); //bigIntToUint(deal.storage_price_per_epoch));
+        emit DealProposalCreate(_id, deal.piece_size, deal.verified_deal, deal.storage_price_per_epoch);
     }
 
     // Returns a CBOR-encoded DealProposal.
