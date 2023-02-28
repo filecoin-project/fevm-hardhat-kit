@@ -49,10 +49,10 @@ struct DealRequest {
     string label;
     int64 start_epoch;
     int64 end_epoch;
-    CommonTypes.BigInt storage_price_per_epoch;
-    CommonTypes.BigInt provider_collateral;
-    CommonTypes.BigInt client_collateral;
-    uint64 version;
+    uint256 storage_price_per_epoch;
+    uint256 provider_collateral;
+    uint256 client_collateral;
+    uint64 extra_params_version;
     ExtraParamsV1 extra_params;
 }
 
@@ -130,9 +130,9 @@ contract DealClient {
         ret.label = deal.label;
         ret.start_epoch = deal.start_epoch;
         ret.end_epoch = deal.end_epoch;
-        ret.storage_price_per_epoch = deal.storage_price_per_epoch;
-        ret.provider_collateral = deal.provider_collateral;
-        ret.client_collateral = deal.client_collateral;
+        ret.storage_price_per_epoch = uintToBigInt(deal.storage_price_per_epoch);
+        ret.provider_collateral = uintToBigInt(deal.provider_collateral);
+        ret.client_collateral = uintToBigInt(deal.client_collateral);
 
         return serializeDealProposal(ret);
     }
