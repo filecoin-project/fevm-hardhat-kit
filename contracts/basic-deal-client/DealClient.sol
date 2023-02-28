@@ -12,10 +12,12 @@ import { MarketCBOR } from "@zondax/filecoin-solidity/contracts/v0.8/cbor/Market
 import { BytesCBOR } from "@zondax/filecoin-solidity/contracts/v0.8/cbor/BytesCbor.sol";
 import { BigNumbers, BigNumber } from "@zondax/solidity-bignumber/src/BigNumbers.sol";
 import "@zondax/filecoin-solidity/contracts/v0.8/external/CBOR.sol";
-import { CBOR_CODEC } from "@zondax/filecoin-solidity/contracts/v0.8/utils/Misc.sol";
 import { ContractDealProposal, serializeContractDealProposal, deserializeContractDealProposal} from "./ContractDealProposal.sol";
 
 import "hardhat/console.sol";
+
+// TODO take from Zondax's filecoin-solidity/Misc.sol
+uint64 constant CBOR_CODEC = 0x51;
 
 using CBOR for CBOR.CBORBuffer;
 
