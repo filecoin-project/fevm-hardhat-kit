@@ -41,10 +41,12 @@ struct ProviderSet {
 // Proposal, but leaves out the provider, since any provider can pick up a deal broadcast by this
 // contract.
 struct DealRequest {
-    CommonTypes.Cid piece_cid;
+    // To be cast to a CommonTypes.Cid
+    bytes piece_cid;
     uint64 piece_size;
     bool verified_deal;
-    CommonTypes.FilAddress client;
+    // To be cast to a CommonTypes.FilAddress
+    bytes client_addr;
     // CommonTypes.FilAddress provider;
     string label;
     int64 start_epoch;
@@ -100,6 +102,7 @@ contract DealClient {
 
     function makeDealProposal(DealRequest calldata deal) public {
         // TODO: evaluate permissioning here
+        // TODO: length check on byte fields
         require(msg.sender == owner);
 
         uint256 index = deals.length;
@@ -109,7 +112,7 @@ contract DealClient {
         bytes32 _id = keccak256(abi.encodePacked(block.timestamp, msg.sender, index));
         dealProposals[_id] = index;
 
-        pieceToProposal[deal.piece_cid.data] = ProposalIdSet(_id, true);
+        pieceToProposal[deal.piece_cid] = ProposalIdSet(_id, true);
 
         // writes the proposal metadata to the event log
         emit DealProposalCreate(_id, deal.piece_size, deal.verified_deal, 0); //bigIntToUint(deal.storage_price_per_epoch));
@@ -121,10 +124,10 @@ contract DealClient {
         DealRequest memory deal = deals[dealProposals[proposalId]];
 
         MarketTypes.DealProposal memory ret;
-        ret.piece_cid = deal.piece_cid;
+        ret.piece_cid = CommonTypes.Cid(deal.piece_cid);
         ret.piece_size = deal.piece_size;
         ret.verified_deal = deal.verified_deal;
-        ret.client = deal.client;
+        ret.client = CommonTypes.FilAddress(deal.client_addr);
         // Set a dummy provider. The provider that picks up this deal will need to set its own address.
         ret.provider = FilAddresses.fromActorID(0);
         ret.label = deal.label;
