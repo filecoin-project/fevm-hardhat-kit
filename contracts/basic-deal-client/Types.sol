@@ -64,10 +64,12 @@ function deserializeDealProposal(bytes memory rawResp) pure returns (MarketTypes
     bytes memory piece_cid;
     (piece_cid, byteIdx) = rawResp.readBytes(byteIdx);
     assert(piece_cid[0] == 0x00);
+    
     // Pop off the first byte, which corresponds to the historical multibase 0x00 byte.
     // https://ipld.io/specs/codecs/dag-cbor/spec/#links
+    ret.piece_cid.data = new bytes(piece_cid.length - 1);
     for (uint256 i = 1; i < piece_cid.length; i++) {
-        ret.piece_cid.data[i] = piece_cid[i];
+        ret.piece_cid.data[i-1] = piece_cid[i];
     }
 
     (ret.piece_size, byteIdx) = rawResp.readUInt64(byteIdx);
