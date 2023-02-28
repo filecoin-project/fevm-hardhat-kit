@@ -127,7 +127,7 @@ contract DealClient {
         ret.piece_cid = CommonTypes.Cid(deal.piece_cid);
         ret.piece_size = deal.piece_size;
         ret.verified_deal = deal.verified_deal;
-        ret.client = getDelegatedAddress(address(this));
+        ret.client = FilAddresses.getDelegatedAddress(address(this));
         // Set a dummy provider. The provider that picks up this deal will need to set its own address.
         ret.provider = FilAddresses.fromActorID(0);
         ret.label = deal.label;
