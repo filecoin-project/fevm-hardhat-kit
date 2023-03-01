@@ -24,7 +24,7 @@ task(
         //convert piece CID string to hex bytes
         const cid = taskArgs.pieceCid
         const cidHexRaw = new CID(cid).toString('base16').substring(1)
-        const cidHex = "0x00" + cidHexRaw
+        const cidHex = "0x" + cidHexRaw
         const contractAddr = taskArgs.contract
         const extraParamsV1 = [
             taskArgs.locationRef,
