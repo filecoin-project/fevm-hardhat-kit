@@ -21,23 +21,30 @@ task(
     .addParam("removeUnsealedCopy", "")
     .setAction(async (taskArgs) => {
         //store taskargs as useable variables
-        const contractAddr = taskArgs.contract
+        //convert piece CID string to hex bytes
         const cid = taskArgs.pieceCid
-        const pieceSize = taskArgs.pieceSize
-        const verifiedDeal = taskArgs.verifiedDeal
-        const label = taskArgs.label
-        const startepoch = taskArgs.startEpoch
-        const endepoch = taskArgs.endEpoch
-        const pricePerEpoch = taskArgs.storagePricePerEpoch
-        const providerCollateral = taskArgs.providerCollateral
-        const clientCollateral = taskArgs.clientCollateral 
-        const extraParamsVersion = taskArgs.extraParamsVersion
-        const extraParams = {
-            locationRef: taskArgs.locationRef,
-            carSize: taskArgs.carSize,
-            skipIpniAnnounce: taskArgs.skipIpniAnnounce,
-            removeUnsealedCopy: taskArgs.removeUnsealedCopy
-        }
+        const cidHexRaw = new CID(cid).toString('base16').substring(1)
+        const cidHex = "0x00" + cidHexRaw
+        const contractAddr = taskArgs.contract
+        const extraParamsV1 = [
+            taskArgs.locationRef,
+            taskArgs.carSize,
+            taskArgs.skipIpniAnnounce,
+            taskArgs.removeUnsealedCopy
+        ]
+        const DealRequestStruct = [
+        cidHex,
+        taskArgs.pieceSize,
+        taskArgs.verifiedDeal,
+        taskArgs.label,
+        taskArgs.startEpoch,
+        taskArgs.endEpoch,
+        taskArgs.storagePricePerEpoch,
+        taskArgs.providerCollateral,
+        taskArgs.clientCollateral, 
+        taskArgs.extraParamsVersion,
+        extraParamsV1,
+        ]
         const networkId = network.name
         console.log("Making deal proposal on network", networkId)
 
@@ -50,31 +57,11 @@ task(
         //this is what you will call to interact with the deployed contract
         const dealClient = await DealClient.attach(contractAddr)
         
-        //convert piece CID string to hex bytes
-        const cidHexRaw = new CID(cid).toString('base16').substring(1)
-        const cidHex = "0x00" + cidHexRaw
-        
         //send a transaction to call makeDealProposal() method
-        transaction = await dealClient.makeDealProposal(
-            cidHex, 
-            pieceSize,
-            verifiedDeal,
-            label,
-            startepoch,
-            endepoch,
-            pricePerEpoch,
-            providerCollateral,
-            clientCollateral,
-            extraParamsVersion,
-            extraParams
-            )
-        transaction.wait()
-       
-        console.log("Complete! Event CreateDealProposal will now be emitted")
-        console.log("Listening for event CreateDealProposal")
+        transaction = await dealClient.makeDealProposal(DealRequestStruct)
+        transactionReceipt = await transaction.wait()
 
         //listen for DealProposalCreate event
-        ethers.provider.on(DealProposalCreate, () => {
-            console.log("Event DealPropsoalCreate emmited on network", networkId)
-        })
+        const event = transactionReceipt.events[0].topics[0]
+        console.log("Complete! Event Emitted. ProposalId is:", event)
     })
