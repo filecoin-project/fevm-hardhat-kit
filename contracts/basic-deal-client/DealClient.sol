@@ -127,7 +127,7 @@ contract DealClient {
         ret.piece_cid = CommonTypes.Cid(deal.piece_cid);
         ret.piece_size = deal.piece_size;
         ret.verified_deal = deal.verified_deal;
-        ret.client = FilAddresses.getDelegatedAddress(address(this));
+        ret.client = getDelegatedAddress(address(this));
         // Set a dummy provider. The provider that picks up this deal will need to set its own address.
         ret.provider = FilAddresses.fromActorID(0);
         ret.label = deal.label;
@@ -138,6 +138,11 @@ contract DealClient {
         ret.client_collateral = uintToBigInt(deal.client_collateral);
 
         return serializeDealProposal(ret);
+    }
+
+    // TODO fix in filecoin-solidity. They're using the wrong hex value.
+    function getDelegatedAddress(address addr) internal pure returns (CommonTypes.FilAddress memory) {
+        return CommonTypes.FilAddress(abi.encodePacked(hex"040a", addr));
     }
 
     function getExtraParams(bytes32 proposalId) view public returns (bytes memory extra_params) {
