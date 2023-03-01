@@ -26,16 +26,22 @@ task(
         const cidHexRaw = new CID(cid).toString('base16').substring(1)
         const cidHex = "0x" + cidHexRaw
         const contractAddr = taskArgs.contract
+
+        const verified = (taskArgs.verifiedDeal === 'true')
+        const skipIpniAnnounce = (taskArgs.skipIpniAnnounce === 'true')
+        const removeUnsealedCopy = (taskArgs.removeUnsealedCopy === 'true')
+
         const extraParamsV1 = [
             taskArgs.locationRef,
             taskArgs.carSize,
-            taskArgs.skipIpniAnnounce,
-            taskArgs.removeUnsealedCopy
+            skipIpniAnnounce,
+            removeUnsealedCopy,
         ]
+
         const DealRequestStruct = [
         cidHex,
         taskArgs.pieceSize,
-        taskArgs.verifiedDeal,
+        verified,
         taskArgs.label,
         taskArgs.startEpoch,
         taskArgs.endEpoch,
