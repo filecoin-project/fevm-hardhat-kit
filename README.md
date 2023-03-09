@@ -54,6 +54,8 @@ Currently there are 2 main types of contracts:
 
 * Filecoin API Examples: Contracts that demo how to use the Filecoin APIs in Solidity to access storage deals and other Filecoin specific functions.
 
+* Basic Deal Client: A contract that demos how to create Filecoin storage deals within Solidity smart contracts. See below to learn more.
+
 
 Type in the following command in the terminal to deploy all contracts:
 
@@ -93,7 +95,7 @@ yarn hardhat store-all --contract "DEPLOYED FILECOIN_MARKET_CONSUMER CONTRACT AD
 
 ### Client Contract - Making Storage Deals in Solidity
 
-Under contracts, within the `basic-deal-client` sub-directory, you will find a file called `DealClient.sol`. This is an example contract that uses the Filecoin.sol API's to create storage deals via Solidity smart contracts on Filecoin. To learn more about this contract feel free to [checkout the original Foundry project](https://github.com/lotus-web3/client-contract) which includes a detailed readme.
+Under contracts, within the `basic-deal-client` sub-directory, you will find a file called `DealClient.sol`. This is an example contract that uses the Filecoin.sol API's to create storage deals via Solidity smart contracts on Filecoin. This works by emitting a Solidity event that [Boost storage providers](https://boost.filecoin.io/) can listen to. To learn more about this contract feel free to [checkout the original Foundry project](https://github.com/lotus-web3/client-contract) which includes a detailed readme.
 
 ### Bounty Contract
 
