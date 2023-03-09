@@ -12,6 +12,7 @@ module.exports = async ({ deployments }) => {
     const chainId = network.config.chainId
     const tokensToBeMinted = networkConfig[chainId]["tokensToBeMinted"]
 
+    /*
     //deploy Simplecoin
     const SimpleCoin = await ethers.getContractFactory('SimpleCoin', wallet);
     console.log('Deploying Simplecoin...');
@@ -32,4 +33,11 @@ module.exports = async ({ deployments }) => {
     const dealRewarder = await DealRewarder.deploy();
     await dealRewarder.deployed()
     console.log('DealRewarder deployed to:', dealRewarder.address);
+    */
+    //deploy DealClient
+    const DealClient = await ethers.getContractFactory('DealClient', wallet);
+    console.log('Deploying DealClient...');
+    const dc = await DealClient.deploy();
+    await dc.deployed()
+    console.log('DealClient deployed to:', dc.address);
 }
