@@ -7,7 +7,16 @@ require("dotenv").config()
 const PRIVATE_KEY = process.env.PRIVATE_KEY
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-    solidity: "0.8.17",
+    solidity: {
+        version: "0.8.17",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 1000,
+            details: { yul: false },
+          },
+        },
+      },
     defaultNetwork: "Hyperspace",
     networks: {
         Hyperspace: {
