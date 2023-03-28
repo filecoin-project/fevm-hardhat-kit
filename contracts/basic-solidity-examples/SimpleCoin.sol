@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
+import "hardhat/console.sol";
 
 error SimpleCoin__NotEnoughBalance();
 
@@ -27,6 +28,12 @@ contract SimpleCoin {
 
                 balances[msg.sender] -= amount;
                 balances[receiver] += amount;
+                 console.log(
+        "Transferring from %s to %s %s tokens",
+        msg.sender,
+        receiver,
+        amount
+    );
                 return true;
         }
 
