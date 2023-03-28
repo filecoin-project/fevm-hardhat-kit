@@ -26,7 +26,6 @@ contract DealRewarder {
     address constant CALL_ACTOR_ID = 0xfe00000000000000000000000000000000000005;
     uint64 constant DEFAULT_FLAG = 0x00000000;
     uint64 constant METHOD_SEND = 0;
-    
 
     constructor() {
         owner = msg.sender;
@@ -52,18 +51,22 @@ contract DealRewarder {
 
         cidProviders[cidraw][provider] = true;
     }
-
+    type FilActorId is uint64;
     function claim_bounty(uint64 deal_id) public {
         MarketTypes.GetDealDataCommitmentReturn memory commitmentRet = MarketAPI.getDealDataCommitment(deal_id);
-        MarketTypes.GetDealProviderReturn memory providerRet = MarketAPI.getDealProvider(deal_id);
+        uint64 providerRet = MarketAPI.getDealProvider(deal_id);
 
-        authorizeData(commitmentRet.data, providerRet.provider, commitmentRet.size);
-
+        authorizeData(commitmentRet.data, providerRet, commitmentRet.size);
+        
         // get dealer (bounty hunter client)
-        MarketTypes.GetDealClientReturn memory clientRet = MarketAPI.getDealClient(deal_id);
+        uint64 clientRet = MarketAPI.getDealClient(deal_id);
 
         // send reward to client 
-        send(clientRet.client);
+        send(clientRet);
+
+        // send reward to client 
+        send(clientRet);
+
     }
 
     function call_actor_id(uint64 method, uint256 value, uint64 flags, uint64 codec, bytes memory params, uint64 id) public returns (bool, int256, uint64, bytes memory) {
@@ -78,9 +81,7 @@ contract DealRewarder {
         delete emptyParams;
 
         uint oneFIL = 1000000000000000000;
-        Actor.callByID(actorID, METHOD_SEND, Misc.NONE_CODEC, emptyParams, oneFIL, false);
-
+        Actor.callByID(CommonTypes.FilActorId.wrap(actorID), METHOD_SEND, Misc.NONE_CODEC, emptyParams, oneFIL, false);
     }
-
 }
 
