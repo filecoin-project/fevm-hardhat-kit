@@ -6,7 +6,7 @@ import {MarketTypes} from "@zondax/filecoin-solidity/contracts/v0.8/types/Market
 import {CommonTypes} from "@zondax/filecoin-solidity/contracts/v0.8/types/CommonTypes.sol";
 
 contract FilecoinMarketConsumer {
-    string public dealLabel;
+    CommonTypes.DealLabel public dealLabel;
     uint64 public dealClientActorId;
     uint64 public dealProviderActorId;
     bool public isDealActivated;
