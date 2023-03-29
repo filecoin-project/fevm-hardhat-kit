@@ -7,7 +7,7 @@ task(
     .addParam("contract", "The address of the deal client solidity")
     .addParam("pieceCid", "The address of the DealRewarder contract")
     .addParam("pieceSize", "The piece CID of the data you want to put up a bounty for")
-    .addParam("verifiedDeal", "Size of the data you are putting a bounty on")
+    .addParam("verifiedDeal", "is the user, Filcoin Plus verified")
     .addParam("label", "The deal label (typically the raw cid)")
     .addParam("startEpoch", "The epoch the deal will start")
     .addParam("endEpoch", "The epoch the deal will end")
