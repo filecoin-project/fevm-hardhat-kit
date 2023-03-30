@@ -68,6 +68,6 @@ task(
         transactionReceipt = await transaction.wait()
 
         //listen for DealProposalCreate event
-        const event = transactionReceipt.events[0].topics[0]
+        const event = transactionReceipt.events[0].topics[1]
         console.log("Complete! Event Emitted. ProposalId is:", event)
     })
