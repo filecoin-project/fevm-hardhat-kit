@@ -48,7 +48,7 @@ Go to the [Hyperspace testnet faucet](https://hyperspace.yoga/#faucet), and past
 
 ## Deploy the Contracts
 
-Currently there are 2 main types of contracts:
+Currently there are 3 main types of contracts:
 
 * Basic Solidity Examples: Simple contracts to show off basic solidity
 
