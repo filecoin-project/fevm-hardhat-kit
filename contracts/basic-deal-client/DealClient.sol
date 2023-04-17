@@ -227,17 +227,28 @@ contract DealClient {
       amp.message
     );
 
-    bytes memory pieceCid = proposal.piece_cid.data;
+//    bytes memory pieceCid = proposal.piece_cid.data;
+
+    // Pop off the first byte, which corresponds to the historical multibase 0x00 byte.
+    // https://ipld.io/specs/codecs/dag-cbor/spec/#links
+    CommonTypes.Cid memory ret;
+    ret.data = new bytes(proposal.piece_cid.data.length - 1);
+    for (uint256 i = 1; i < proposal.piece_cid.data.length; i++) {
+         ret.data[i-1] = proposal.piece_cid.data[i];
+    }
+
+    bytes memory pieceCid = ret.data;
+
     require(pieceRequests[pieceCid].valid, "piece cid must be added before authorizing");
     require(!pieceProviders[pieceCid].valid, "deal failed policy check: provider already claimed this cid");
 
     DealRequest memory req = getDealRequest(pieceRequests[pieceCid].requestId);
     require(proposal.verified_deal == req.verified_deal, "verified_deal param mismatch");
     (uint256 proposalStoragePricePerEpoch, bool storagePriceConverted) = BigInts.toUint256(proposal.storage_price_per_epoch);
-    (uint256 proposalClientCollateral, bool collateralConverted) = BigInts.toUint256(proposal.storage_price_per_epoch);
-    require(storagePriceConverted && collateralConverted, "Issues converting uint256 to BigInt, may not have accurate values");
-    require(proposalStoragePricePerEpoch <= req.storage_price_per_epoch, "storage price greater than request amount");
-    require(proposalClientCollateral <= req.client_collateral, "client collateral greater than request amount");
+//    (uint256 proposalClientCollateral, bool collateralConverted) = BigInts.toUint256(proposal.storage_price_per_epoch);
+//    require(storagePriceConverted && collateralConverted, "Issues converting uint256 to BigInt, may not have accurate values");
+//    require(proposalStoragePricePerEpoch <= req.storage_price_per_epoch, "storage price greater than request amount");
+//    require(proposalClientCollateral <= req.client_collateral, "client collateral greater than request amount");
 
   }
 
@@ -263,21 +274,32 @@ contract DealClient {
     // marketDealNotify calls where someone could have 2 of the same deal proposals
     // within the same PSD msg, which would then get validated by authenticateMessage
     // However, only one of those deals should be allowed
+
+    // Pop off the first byte, which corresponds to the historical multibase 0x00 byte.
+    // https://ipld.io/specs/codecs/dag-cbor/spec/#links
+    CommonTypes.Cid memory ret;
+    ret.data = new bytes(proposal.piece_cid.data.length - 1);
+    for (uint256 i = 1; i < proposal.piece_cid.data.length; i++) {
+         ret.data[i-1] = proposal.piece_cid.data[i];
+    }
+
+    bytes memory pieceCid = ret.data;
+
     require(
-      pieceRequests[proposal.piece_cid.data].valid,
+      pieceRequests[pieceCid].valid,
       "piece cid must be added before authorizing"
     );
     require(
-      !pieceProviders[proposal.piece_cid.data].valid,
+      !pieceProviders[pieceCid].valid,
       "deal failed policy check: provider already claimed this cid"
     );
 
-    pieceProviders[proposal.piece_cid.data] = ProviderSet(
+    pieceProviders[pieceCid] = ProviderSet(
       proposal.provider.data,
       true
     );
-    pieceDeals[proposal.piece_cid.data] = mdnp.dealId;
-    pieceStatus[proposal.piece_cid.data] = Status.DealPublished;
+    pieceDeals[pieceCid] = mdnp.dealId;
+    pieceStatus[pieceCid] = Status.DealPublished;
   }
 
 
