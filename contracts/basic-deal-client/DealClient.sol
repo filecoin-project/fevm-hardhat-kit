@@ -109,6 +109,14 @@ contract DealClient {
         return pieceProviders[cid];
     }
 
+    function getPieceStatus(bytes calldata cid) public view returns (Status){
+        return pieceStatus[cid];
+    }
+
+    function getDealId(bytes calldata cid) public view returns(uint64) {
+        return pieceDeals[cid];
+    }
+
     function getProposalIdSet(bytes calldata cid) public view returns (RequestId memory) {
         return pieceRequests[cid];
     }
