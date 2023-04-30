@@ -8,36 +8,37 @@ const private_key = network.config.accounts[0]
 const wallet = new ethers.Wallet(private_key, ethers.provider)
 
 module.exports = async ({ deployments }) => {
+    const { deploy } = deployments;
     console.log("Wallet Ethereum Address:", wallet.address)
     const chainId = network.config.chainId
     const tokensToBeMinted = networkConfig[chainId]["tokensToBeMinted"]
 
     
     //deploy Simplecoin
-    const SimpleCoin = await ethers.getContractFactory('SimpleCoin', wallet);
-    console.log('Deploying Simplecoin...');
-    const simpleCoin = await SimpleCoin.deploy(tokensToBeMinted);
-    await simpleCoin.deployed()
-    console.log('SimpleCoin deployed to:', simpleCoin.address);
+    const simpleCoin = await deploy("SimpleCoin", {
+        from: wallet.address,
+        args: [tokensToBeMinted],
+        log: true,
+    });
 
     //deploy FilecoinMarketConsumer
-    const FilecoinMarketConsumer = await ethers.getContractFactory('FilecoinMarketConsumer', wallet);
-    console.log('Deploying FilecoinMarketConsumer...');
-    const filecoinMarketConsumer = await FilecoinMarketConsumer.deploy();
-    await filecoinMarketConsumer.deployed()
-    console.log('FilecoinMarketConsumer deployed to:', filecoinMarketConsumer.address);
+    const filecoinMarketConsumer = await deploy("FilecoinMarketConsumer", {
+        from: wallet.address,
+        args: [],
+        log: true,
+    });
 
     //deploy DealRewarder
-    const DealRewarder = await ethers.getContractFactory('DealRewarder', wallet);
-    console.log('Deploying DealRewarder...');
-    const dealRewarder = await DealRewarder.deploy();
-    await dealRewarder.deployed()
-    console.log('DealRewarder deployed to:', dealRewarder.address);
+    const dealRewarder = await deploy("DealRewarder", {
+        from: wallet.address,
+        args: [],
+        log: true,
+    });
     
     //deploy DealClient
-    const DealClient = await ethers.getContractFactory('DealClient', wallet);
-    console.log('Deploying DealClient...');
-    const dc = await DealClient.deploy();
-    await dc.deployed()
-    console.log('DealClient deployed to:', dc.address);
+    const dealClient = await deploy("DealClient", {
+        from: wallet.address,
+        args: [],
+        log: true,
+    });
 }
