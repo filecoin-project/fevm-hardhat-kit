@@ -19,17 +19,17 @@ module.exports = {
       },
     defaultNetwork: "Hyperspace",
     networks: {
-        Localnet: {
+        localnet: {
             chainId: 31415926,
             url: "http://127.0.0.1:1234/rpc/v1",
             accounts: [PRIVATE_KEY],
         },
-        Hyperspace: {
+        hyperspace: {
             chainId: 3141,
             url: "https://api.hyperspace.node.glif.io/rpc/v1",
             accounts: [PRIVATE_KEY],
         },
-        FilecoinMainnet: {
+        filecoinmainnet: {
             chainId: 314,
             url: "https://api.node.glif.io",
             accounts: [PRIVATE_KEY],
