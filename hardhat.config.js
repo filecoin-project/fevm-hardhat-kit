@@ -17,7 +17,7 @@ module.exports = {
           },
         },
       },
-    defaultNetwork: "Hyperspace",
+    defaultNetwork: "hyperspace",
     networks: {
         localnet: {
             chainId: 31415926,
