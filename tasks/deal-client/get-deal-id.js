@@ -14,7 +14,8 @@ task("get-deal-id", "Gets a deal proposal from the proposal id")
 
         //convert piece CID string to hex bytes
         const cidHexRaw = new CID(cid).toString("base16").substring(1)
-        const cidHex = "0x00" + cidHexRaw
+        // const cidHex = "0x00" + cidHexRaw
+        const cidHex = "0x" + cidHexRaw
         console.log("Hex bytes are:", cidHex)
         console.log("Complete!")
 
@@ -49,7 +50,7 @@ task("get-deal-id", "Gets a deal proposal from the proposal id")
         console.log("The dealsLength is:", dealsLength)
 
         // getDealByIndex
-        let getDealByIndex = await dealClient.getDealByIndex(1)
+        let getDealByIndex = await dealClient.getDealByIndex(0)
         console.log("The DealByIndex is:", getDealByIndex)
     })
 
