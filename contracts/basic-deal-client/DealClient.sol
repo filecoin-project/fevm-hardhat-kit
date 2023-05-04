@@ -109,11 +109,11 @@ contract DealClient {
         return pieceProviders[cid];
     }
 
-    function getPieceStatus(bytes calldata cid) public view returns (Status){
+    function getPieceStatus(bytes calldata cid) public view returns (Status) {
         return pieceStatus[cid];
     }
 
-    function getDealId(bytes calldata cid) public view returns(uint64) {
+    function getDealId(bytes calldata cid) public view returns (uint64) {
         return pieceDeals[cid];
     }
 
@@ -217,11 +217,22 @@ contract DealClient {
         (uint256 proposalStoragePricePerEpoch, bool storagePriceConverted) = BigInts.toUint256(
             proposal.storage_price_per_epoch
         );
+        // (uint256 proposalClientCollateral, bool collateralConverted) = BigInts.toUint256(
+        //     proposal.storage_price_per_epoch
+        // );
+        // require(
+        //     storagePriceConverted && collateralConverted,
+        //     "Issues converting uint256 to BigInt, may not have accurate values"
+        // );
+        require(
+            !storagePriceConverted,
+            "Issues converting uint256 to BigInt, may not have accurate values"
+        );
         (uint256 proposalClientCollateral, bool collateralConverted) = BigInts.toUint256(
-            proposal.storage_price_per_epoch
+            proposal.client_collateral
         );
         require(
-            storagePriceConverted && collateralConverted,
+            !collateralConverted,
             "Issues converting uint256 to BigInt, may not have accurate values"
         );
         require(
