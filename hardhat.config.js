@@ -17,7 +17,7 @@ module.exports = {
           },
         },
       },
-    defaultNetwork: "hyperspace",
+    defaultNetwork: "calibration",
     networks: {
         localnet: {
             chainId: 31415926,
@@ -32,6 +32,11 @@ module.exports = {
         filecoinmainnet: {
             chainId: 314,
             url: "https://api.node.glif.io",
+            accounts: [PRIVATE_KEY],
+        },
+        calibration: {
+            chainId: 314159,
+            url: "https://api.calibration.node.glif.io/rpc/v1",
             accounts: [PRIVATE_KEY],
         },
     },
