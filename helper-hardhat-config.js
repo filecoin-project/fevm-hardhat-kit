@@ -6,7 +6,7 @@ const networkConfig = {
 	tokensToBeMinted: 12000,
     },
     3141: {
-        name: "hyperspace",
+        name: "calibrationnet",
         tokensToBeMinted: 12000,
     },
     314: {
