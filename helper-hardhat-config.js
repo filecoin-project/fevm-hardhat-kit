@@ -5,7 +5,7 @@ const networkConfig = {
 	name: "localnet",
 	tokensToBeMinted: 12000,
     },
-    3141: {
+    314159: {
         name: "calibrationnet",
         tokensToBeMinted: 12000,
     },
