@@ -25,7 +25,7 @@ module.exports = {
             accounts: [PRIVATE_KEY],
         },
         calibrationnet: {
-            chainId: 3141,
+            chainId: 314159,
             url: "https://api.calibration.node.glif.io/rpc/v1",
             accounts: [PRIVATE_KEY],
         },
