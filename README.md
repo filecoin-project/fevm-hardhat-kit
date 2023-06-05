@@ -43,7 +43,7 @@ This will show you the ethereum-style address associated with that private key a
 
 ## Fund the Deployer Address
 
-Go to the [Calibrationnet testnet faucet](https://calibration.yoga/#faucet), and paste in the Ethereum address from the previous step. This will send some calibration testnet FIL to the account.
+Go to the [Calibrationnet testnet faucet](https://faucet.calibration.fildev.network/), and paste in the Ethereum address from the previous step. This will send some calibration testnet FIL to the account.
 
 
 ## Deploy the Contracts
