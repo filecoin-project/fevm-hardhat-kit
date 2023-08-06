@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity 0.8.17;
 
 import {MarketAPI} from "@zondax/filecoin-solidity/contracts/v0.8/MarketAPI.sol";
 import {CommonTypes} from "@zondax/filecoin-solidity/contracts/v0.8/types/CommonTypes.sol";
 import {MarketTypes} from "@zondax/filecoin-solidity/contracts/v0.8/types/MarketTypes.sol";
 import {AccountTypes} from "@zondax/filecoin-solidity/contracts/v0.8/types/AccountTypes.sol";
-import {CommonTypes} from "@zondax/filecoin-solidity/contracts/v0.8/types/CommonTypes.sol";
 import {AccountCBOR} from "@zondax/filecoin-solidity/contracts/v0.8/cbor/AccountCbor.sol";
 import {MarketCBOR} from "@zondax/filecoin-solidity/contracts/v0.8/cbor/MarketCbor.sol";
 import {BytesCBOR} from "@zondax/filecoin-solidity/contracts/v0.8/cbor/BytesCbor.sol";
@@ -97,7 +96,7 @@ contract DealClient {
   mapping(bytes => RequestId) public pieceRequests; // commP -> dealProposalID
   mapping(bytes => ProviderSet) public pieceProviders; // commP -> provider
   mapping(bytes => uint64) public pieceDeals; // commP -> deal ID
-  mapping(bytes => Status) public pieceStatus;
+  mapping(bytes => Status) public pieceStatus; // commP -> Status
 
   event ReceivedDataCap(string received);
   event DealProposalCreate(
