@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity 0.8.17;
 
 import {MarketAPI} from "@zondax/filecoin-solidity/contracts/v0.8/MarketAPI.sol";
 import {CommonTypes} from "@zondax/filecoin-solidity/contracts/v0.8/types/CommonTypes.sol";
 import {MarketTypes} from "@zondax/filecoin-solidity/contracts/v0.8/types/MarketTypes.sol";
 import {AccountTypes} from "@zondax/filecoin-solidity/contracts/v0.8/types/AccountTypes.sol";
-import {CommonTypes} from "@zondax/filecoin-solidity/contracts/v0.8/types/CommonTypes.sol";
 import {AccountCBOR} from "@zondax/filecoin-solidity/contracts/v0.8/cbor/AccountCbor.sol";
 import {MarketCBOR} from "@zondax/filecoin-solidity/contracts/v0.8/cbor/MarketCbor.sol";
 import {BytesCBOR} from "@zondax/filecoin-solidity/contracts/v0.8/cbor/BytesCbor.sol";
@@ -234,8 +233,9 @@ contract DealClient {
     DealRequest memory req = getDealRequest(pieceRequests[pieceCid].requestId);
     require(proposal.verified_deal == req.verified_deal, "verified_deal param mismatch");
     (uint256 proposalStoragePricePerEpoch, bool storagePriceConverted) = BigInts.toUint256(proposal.storage_price_per_epoch);
-    (uint256 proposalClientCollateral, bool collateralConverted) = BigInts.toUint256(proposal.storage_price_per_epoch);
-    require(storagePriceConverted && collateralConverted, "Issues converting uint256 to BigInt, may not have accurate values");
+    require(!storagePriceConverted, "Issues converting uint256 to BigInt, may not have accurate values");
+    (uint256 proposalClientCollateral, bool collateralConverted) = BigInts.toUint256(proposal.client_collateral);
+    require(!collateralConverted, "Issues converting uint256 to BigInt, may not have accurate values");
     require(proposalStoragePricePerEpoch <= req.storage_price_per_epoch, "storage price greater than request amount");
     require(proposalClientCollateral <= req.client_collateral, "client collateral greater than request amount");
 

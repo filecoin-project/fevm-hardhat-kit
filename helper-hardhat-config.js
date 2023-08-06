@@ -2,15 +2,15 @@ const { ethers } = require("hardhat")
 
 const networkConfig = {
     31415926: {
-	name: "Localnet",
+	name: "localnet",
 	tokensToBeMinted: 12000,
     },
-    3141: {
-        name: "Hyperspace",
+    314159: {
+        name: "calibrationnet",
         tokensToBeMinted: 12000,
     },
     314: {
-        name: "FilecoinMainnet",
+        name: "filecoinmainnet",
         tokensToBeMinted: 12000,
     },
 }
