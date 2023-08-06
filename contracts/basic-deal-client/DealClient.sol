@@ -96,7 +96,7 @@ contract DealClient {
   mapping(bytes => RequestId) public pieceRequests; // commP -> dealProposalID
   mapping(bytes => ProviderSet) public pieceProviders; // commP -> provider
   mapping(bytes => uint64) public pieceDeals; // commP -> deal ID
-  mapping(bytes => Status) public pieceStatus;
+  mapping(bytes => Status) public pieceStatus; // commP -> Status
 
   event ReceivedDataCap(string received);
   event DealProposalCreate(
