@@ -38,7 +38,7 @@
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.0",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
-    "@openzeppelin/contracts": "^4.9.2",
+    "@openzeppelin/contracts": "^4.9.3",
     "@typechain/hardhat": "^6.1.2",
     "@zondax/filecoin-solidity": "^4.0.3",
     "babel-eslint": "^10.1.0",

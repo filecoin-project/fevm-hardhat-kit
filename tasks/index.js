@@ -10,3 +10,6 @@ exports.claimBounty = require("./deal-rewarder/claim-bounty")
 exports.makeDealProposal = require("./deal-client/make-deal-proposal")
 exports.getDealProposal = require("./deal-client/get-deal-proposal")
 exports.getDealStatus = require("./deal-client/get-deal-status")
+
+exports.ownerOf = require("./game-item/owner-of")
+exports.awardItem = require("./game-item/award-item")
