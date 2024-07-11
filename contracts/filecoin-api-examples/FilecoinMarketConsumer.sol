@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.23;
 
-import {MarketAPI} from "@zondax/filecoin-solidity/contracts/v0.8/MarketAPI.sol";
-import {MarketTypes} from "@zondax/filecoin-solidity/contracts/v0.8/types/MarketTypes.sol";
-import {CommonTypes} from "@zondax/filecoin-solidity/contracts/v0.8/types/CommonTypes.sol";
+import {MarketAPI} from "filecoin-solidity-api/contracts/v0.8/MarketAPI.sol";
+import {MarketTypes} from "filecoin-solidity-api/contracts/v0.8/types/MarketTypes.sol";
+import {CommonTypes} from "filecoin-solidity-api/contracts/v0.8/types/CommonTypes.sol";
 
 contract FilecoinMarketConsumer {
     CommonTypes.DealLabel public dealLabel;
@@ -13,7 +13,7 @@ contract FilecoinMarketConsumer {
     MarketTypes.GetDealDataCommitmentReturn public dealCommitment;
     MarketTypes.GetDealTermReturn public dealTerm;
     CommonTypes.BigInt public dealPricePerEpoch;
-    CommonTypes.BigInt public clientCollateral; 
+    CommonTypes.BigInt public clientCollateral;
     CommonTypes.BigInt public providerCollateral;
     MarketTypes.GetDealActivationReturn public activationStatus;
 
@@ -28,45 +28,45 @@ contract FilecoinMarketConsumer {
         storeProviderCollateral(dealId);
         storeDealVerificaton(dealId);
         storeDealActivationStatus(dealId);
-    } 
+    }
 
-    function storeDealLabel(uint64 dealId) public  {
-        dealLabel = MarketAPI.getDealLabel(dealId);
+    function storeDealLabel(uint64 dealId) public {
+        (, dealLabel) = MarketAPI.getDealLabel(dealId);
     }
 
     function storeDealClient(uint64 dealId) public {
-        dealClientActorId = MarketAPI.getDealClient(dealId);
+        (, dealClientActorId) = MarketAPI.getDealClient(dealId);
     }
 
     function storeDealClientProvider(uint64 dealId) public {
-        dealProviderActorId = MarketAPI.getDealProvider(dealId);
+        (, dealProviderActorId) = MarketAPI.getDealProvider(dealId);
     }
 
     function storeDealCommitment(uint64 dealId) public {
-        dealCommitment = MarketAPI.getDealDataCommitment(dealId);
+        (, dealCommitment) = MarketAPI.getDealDataCommitment(dealId);
     }
 
     function storeDealTerm(uint64 dealId) public {
-        dealTerm = MarketAPI.getDealTerm(dealId);
+        (, dealTerm) = MarketAPI.getDealTerm(dealId);
     }
 
     function storeDealTotalPrice(uint64 dealId) public {
-       dealPricePerEpoch = MarketAPI.getDealTotalPrice(dealId);
+        (, dealPricePerEpoch) = MarketAPI.getDealTotalPrice(dealId);
     }
 
     function storeClientCollateral(uint64 dealId) public {
-        clientCollateral = MarketAPI.getDealClientCollateral(dealId);
+        (, clientCollateral) = MarketAPI.getDealClientCollateral(dealId);
     }
-    
+
     function storeProviderCollateral(uint64 dealId) public {
-        providerCollateral = MarketAPI.getDealProviderCollateral(dealId);
+        (, providerCollateral) = MarketAPI.getDealProviderCollateral(dealId);
     }
 
     function storeDealVerificaton(uint64 dealId) public {
-        isDealActivated = MarketAPI.getDealVerified(dealId);
+        (, isDealActivated) = MarketAPI.getDealVerified(dealId);
     }
 
     function storeDealActivationStatus(uint64 dealId) public {
-        activationStatus = MarketAPI.getDealActivation(dealId);
+        (, activationStatus) = MarketAPI.getDealActivation(dealId);
     }
 }
