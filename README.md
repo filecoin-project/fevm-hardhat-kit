@@ -17,7 +17,7 @@ This will clone the hardhat kit onto your computer, switch directories into the 
 
 ## Get a Private Key
 
-You can get a private key from a wallet provider [such as Metamask](https://metamask.zendesk.com/hc/en-us/articles/360015289632-How-to-export-an-account-s-private-key).
+You can get a private key from a wallet provider [such as Metamask](https://support.metamask.io/configure/accounts/how-to-export-an-accounts-private-key/).
 
 
 ## Add your Private Key as an Environment Variable
