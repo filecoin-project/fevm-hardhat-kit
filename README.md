@@ -1,5 +1,7 @@
 # FEVM Hardhat Kit
 
+A comprehensive TypeScript-based Hardhat development kit for building smart contracts on the Filecoin EVM (FEVM). This kit includes example contracts, deployment scripts with verification support on blockscout-filfox explorers, and interactive tasks for contract interaction.
+
 ## Cloning the Repo
 
 Open up your terminal (or command prompt) and navigate to a directory you would like to store this code on. Once there type in the following command:
@@ -15,20 +17,21 @@ yarn install
 This will clone the hardhat kit onto your computer, switch directories into the newly installed kit, and install the dependencies the kit needs to work.
 
 
-## Get a Private Key
+## Setup Environment Variables
 
-You can get a private key from a wallet provider [such as Metamask](https://support.metamask.io/configure/accounts/how-to-export-an-accounts-private-key/).
+1. **Get a private key** from a wallet provider [such as Metamask](https://support.metamask.io/configure/accounts/how-to-export-an-accounts-private-key/).
 
+2. **Create your environment file:**
+   ```bash
+   cp .env.example .env
+   ```
 
-## Add your Private Key as an Environment Variable
+3. **Replace your private key** in the `.env` file:
+   ```bash
+   PRIVATE_KEY=your_private_key_here
+   ```
 
-Add your private key as an environment variable by running this command:
-
- ```
-export PRIVATE_KEY='abcdef'
-```
-
-If you use a .env file, don't commit and push any changes to .env files that may contain sensitive information, such as a private key! If this information reaches a public GitHub repository, someone can use it to check if you have any Mainnet funds in that wallet address, and steal them!
+**⚠️ Security Warning:** Never commit `.env` files containing private keys to version control. The `.env` file is already gitignored by default - do not remove it from `.gitignore`.
 
 
 ## Get the Deployer Address
@@ -43,19 +46,17 @@ This will show you the ethereum-style address associated with that private key a
 
 ## Fund the Deployer Address
 
-Go to the [Calibrationnet testnet faucet](https://faucet.calibration.fildev.network/), and paste in the Ethereum address from the previous step. This will send some calibration testnet FIL to the account.
+Go to the [Calibrationnet testnet faucet](https://faucet.calibnet.chainsafe-fil.io/funds.html), and paste in the Ethereum address from the previous step. This will send some calibration testnet FIL to the account.
 
 
 ## Deploy the Contracts
 
-Currently there are 3 main types of contracts:
+Currently the kit deploys 4 main contracts:
 
-* Basic Solidity Examples: Simple contracts to show off basic solidity
-
-* Filecoin API Examples: Contracts that demo how to use the Filecoin APIs in Solidity to access storage deals and other Filecoin specific functions.
-
-* Basic Deal Client: A contract that demos how to create Filecoin storage deals within Solidity smart contracts. See below to learn more.
-
+* **SimpleCoin**: A basic ERC20-style token contract demonstrating simple Solidity functionality
+* **FilecoinMarketConsumer**: A contract that demonstrates how to use Filecoin APIs to access storage deal data
+* **DealRewarder**: A bounty contract for incentivizing data storage on Filecoin
+* **DealClient**: A contract that creates Filecoin storage deals within Solidity smart contracts
 
 Type in the following command in the terminal to deploy all contracts:
 
@@ -63,13 +64,18 @@ Type in the following command in the terminal to deploy all contracts:
 yarn hardhat deploy
 ```
 
-This will compile all the contracts in the contracts folder and deploy them to the Calibrationnet test network automatically!
+This will compile all the contracts in the contracts folder and deploy them to the Calibrationnet test network. The deployment script automatically attempts to verify contracts on both Blockscout and Filfox explorers. You can skip verification steps by setting these environment variables in your .env file:
+
+```
+IGNORE_FILFOX_VERIFICATION=true
+IGNORE_BLOCKSCOUT_VERIFICATION=true
+```
 
 Keep note of the deployed contract addresses for the next step.
 
 ## Interact with the Contracts
 
-You can interact with contracts via hardhat tasks, found in the 'tasks' folder. For example, to interact with the SimpleCoin contract:
+You can interact with contracts via hardhat tasks, found in the 'tasks' folder. The kit includes tasks for all deployed contracts. For example, to interact with the SimpleCoin contract:
 
 Type in the following command in the terminal:
 
