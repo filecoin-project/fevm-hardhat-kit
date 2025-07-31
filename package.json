@@ -14,6 +14,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@fil-b/filfox-verifier": "^1.0.1",
     "@glif/filecoin-address": "^2.0.43",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.8",
     "@nomicfoundation/hardhat-ethers": "^3.0.8",

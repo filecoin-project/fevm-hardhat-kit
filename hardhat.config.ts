@@ -9,6 +9,7 @@ import "hardhat-deploy-ethers"
 import "hardhat-gas-reporter"
 import { HardhatUserConfig } from "hardhat/config"
 import "solidity-coverage"
+import "@fil-b/filfox-verifier/hardhat"
 dotenvConfig()
 const deployerPrivateKey = process.env.PRIVATE_KEY!
 
