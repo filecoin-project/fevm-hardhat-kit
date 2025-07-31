@@ -43,6 +43,44 @@ const config: HardhatUserConfig = {
             chainId: 314159,
         },
     },
+    // configuration for harhdat-verify plugin with Blockscout API
+    etherscan: {
+        enabled: true,
+        apiKey: {
+            filecoin: "empty",
+            calibration: "empty",
+        },
+        customChains: [
+            {
+                network: "filecoin",
+                chainId: 314,
+                urls: {
+                    apiURL: "https://filecoin.blockscout.com/api",
+                    browserURL: "https://filecoin.blockscout.com",
+                },
+            },
+            {
+                network: "calibration",
+                chainId: 314159,
+                urls: {
+                    apiURL: "https://filecoin-testnet.blockscout.com/api",
+                    browserURL: "https://filecoin-testnet.blockscout.com",
+                },
+            },
+        ],
+    },
+    verify: {
+        etherscan: {
+            apiKey: "empty",
+        },
+    },
+    sourcify: {
+        enabled: true, // verifies both on Sourcify and on Blockscout
+        // Optional: specify a different Sourcify server
+        apiUrl: "https://sourcify.dev/server",
+        // Optional: specify a different Sourcify repository
+        browserUrl: "https://repo.sourcify.dev",
+    },
 }
 
 export default config
