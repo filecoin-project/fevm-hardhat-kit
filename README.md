@@ -110,3 +110,26 @@ Under contracts, within the `basic-deal-client` sub-directory, you will find a f
 ### Bounty Contract
 
 Under contracts, within the `filecoin-api-examples` sub-directory, you will find a file called `deal-rewarder.sol`. This is a basic example contract that uses the Filecoin.sol API's to create bounties for specific data to be stored on the Filecoin blockchain. This is intended to be an example to illustrate how you can use the Filecoin APIs to do some cool functionality. To learn more about this contract feel free to [checkout the original Foundry project](https://github.com/lotus-web3/deal-bounty-contract) which includes a detailed readme.
+
+
+[ OS Error ]
+
+Running `yarn install` the error below is displayed on the cmd/cli
+
+```ERROR: [Errno 2] No such file or directory: 'install' ```
+
+[ Fix ]
+
+```
+sudo apt remove cmdtest
+sudo apt remove yarn
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+sudo apt-get update
+sudo apt-get install yarn -y
+
+```
+
+[Reinstall the yarn]
+
+```yarn install```
